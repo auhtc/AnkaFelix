@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AUHTC.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="PortNames" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">COM1;COM2;COM3;COM4</Value>
+    </Setting>
+    <Setting Name="DefaultPortName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM1</Value>
+    </Setting>
+    <Setting Name="BaudRates" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">2400;4800;9600;19200;38400;57600;115200;230400;460800;921600</Value>
+    </Setting>
+    <Setting Name="DefaultBaudRate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9600</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
