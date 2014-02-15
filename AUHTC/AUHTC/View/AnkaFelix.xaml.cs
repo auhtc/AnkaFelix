@@ -58,6 +58,7 @@ namespace AUHTC
             string totalData = App.ViewModel.EndDataRead();
             //System.Collections.ObjectModel.ObservableCollection<Model.SerialDataModel> sm = App.ViewModel.DataCollection;
             MessageBox.Show(totalData);
+            //Test for Github
         }
     }
 }
