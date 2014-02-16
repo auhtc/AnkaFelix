@@ -50,7 +50,7 @@ namespace AUHTC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.DataContext = App.ViewModel;
+            screen.DataContext = App.ViewModel;//.DataCollection;
         }
 
         private void connEnd_Click(object sender, RoutedEventArgs e)

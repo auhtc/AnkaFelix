@@ -4,6 +4,27 @@
         Title="AnkaFelix" Height="300" Width="300"
         Loaded="Window_Loaded"
         Closing="Window_Closing">
+    <Window.Resources>
+        <DataTemplate x:Key="ListBoxTemplate">
+            <Grid HorizontalAlignment="Stretch" Width="Auto">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock 
+                    Text="{Binding Name}"
+                    Grid.Column="0"
+                    VerticalAlignment="Top" Margin="0, 0, 0, 0"
+                    Foreground="Black"/>
+                <TextBlock 
+                    Text="{Binding Value}"
+                    Grid.Column="1"
+                    VerticalAlignment="Top" Margin="0, 0, 0, 0"
+                    Foreground="Black"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Label
             x:Name="PortNamesLabel"
@@ -45,11 +66,12 @@
             Margin="10,200,0,0"
             Click="connStart_Click"/>
         <ListBox x:Name="screen"
-                   Margin="10,76,0,0"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Width="272" Height="119"
-                   ItemsSource="{Binding DataCollection}">
+                 Margin="10,76,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 Width="272" Height="119"
+                 ItemsSource="{Binding DataCollection}"
+                 ItemTemplate="{StaticResource ListBoxTemplate}">
         </ListBox>
         <Button
             x:Name="connEnd"

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -35,7 +36,9 @@ namespace AUHTC.ViewModel
             {
                 if (value != dataCollection)
                 {
+                    dataCollection = value;
                     NotifyPropertyChanged("DataCollection");
+                    //Debug.Write(value);
                 }
             }
         }
@@ -43,7 +46,6 @@ namespace AUHTC.ViewModel
         public void ReadDataFromPort(string portName, string baudRate)
         {
             serial = new SerialPort();
-            dataCollection = new ObservableCollection<SerialDataModel>();
             try
             {
                 serial.PortName = portName;
@@ -51,6 +53,7 @@ namespace AUHTC.ViewModel
                 serial.NewLine = "\r";
                 serial.Open();
 
+                DataCollection = new ObservableCollection<SerialDataModel>(); //Metod çağrıldığında nesne oluşur.
                 serial.DataReceived += new SerialDataReceivedEventHandler(RecieveData);
             }
             catch
@@ -60,25 +63,30 @@ namespace AUHTC.ViewModel
 
         private void RecieveData(object sender, SerialDataReceivedEventArgs e)
         {
+            //DataCollection = new ObservableCollection<SerialDataModel>();  // Event her handle edilişinde yeni nesne oluşur.
             serialData = serial.ReadLine();
             List<string> list = serialData.Split('$').ToList();
 
-            foreach (string item in list)
+            try
             {
-                if (regex.IsMatch(item))
-                {
-                    try
+                System.Windows.Application.Current.Dispatcher.Invoke(
+                    DispatcherPriority.Normal, (Action)delegate()
                     {
-                        serialDataModel = new SerialDataModel();
-                        serialDataModel.Name = item.Split(',')[0];
-                        serialDataModel.Value = Convert.ToInt32(item.Split(',')[1]);
-                        DataCollection.Add(serialDataModel);
-                    }
-                    catch
-                    {
-                        serial.Close();
-                    }
-                }
+                        foreach (string item in list)
+                        {
+                            if (regex.IsMatch(item))
+                            {
+                                serialDataModel = new SerialDataModel();
+                                serialDataModel.Name = item.Split(',')[0];
+                                serialDataModel.Value = Convert.ToInt32(item.Split(',')[1]);
+                                DataCollection.Add(serialDataModel);
+                            }
+                        }
+                    });
+            }
+            catch
+            {
+                EndDataRead();
             }
         }
 
@@ -92,8 +100,8 @@ namespace AUHTC.ViewModel
 
         internal string EndDataRead()
         {
-            string x = "";
-            foreach (SerialDataModel item in dataCollection)
+            string x = "Bağlantı Sonlandı!\n";
+            foreach (SerialDataModel item in DataCollection)
             {
                 x += item.Name + "-" + item.Value.ToString() + "\n";
             }
