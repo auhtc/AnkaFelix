@@ -38,7 +38,6 @@ namespace AUHTC.ViewModel
                 {
                     dataCollection = value;
                     NotifyPropertyChanged("DataCollection");
-                    //Debug.Write(value);
                 }
             }
         }
@@ -53,34 +52,47 @@ namespace AUHTC.ViewModel
                 serial.NewLine = "\r";
                 serial.Open();
 
-                DataCollection = new ObservableCollection<SerialDataModel>(); //Metod çağrıldığında nesne oluşur.
+                //DataCollection = new ObservableCollection<SerialDataModel>(); //Metod çağrıldığında nesne oluşur.
                 serial.DataReceived += new SerialDataReceivedEventHandler(RecieveData);
             }
-            catch
+            catch (Exception excp)
             {
+                string message = excp.Message + "\n";
+                string openPort = SerialPort.GetPortNames().ToList().FirstOrDefault();
+
+                if (string.IsNullOrEmpty(openPort))
+                {
+                    message = "Kullanılabilir Bağlantı Noktası Yok!";
+                    System.Windows.MessageBox.Show(message);
+                }
+                else
+                {
+                    message += "\n" + openPort + " bağlantı noktasını kullanmak ister misiniz?";
+                    if (System.Windows.MessageBox.Show(message, "Uyarı!", System.Windows.MessageBoxButton.OKCancel) == System.Windows.MessageBoxResult.OK)
+                    {
+                        Properties.Settings.Default.DefaultPortName = openPort;
+                        ReadDataFromPort(openPort, baudRate);
+                    }
+                }
             }
         }
 
         private void RecieveData(object sender, SerialDataReceivedEventArgs e)
         {
-            //DataCollection = new ObservableCollection<SerialDataModel>();  // Event her handle edilişinde yeni nesne oluşur.
-            serialData = serial.ReadLine();
-            List<string> list = serialData.Split('$').ToList();
+            DataCollection = new ObservableCollection<SerialDataModel>();  // Event her handle edilişinde yeni nesne oluşur.
 
             try
             {
+                serialData = serial.ReadLine().Trim('$');
                 System.Windows.Application.Current.Dispatcher.Invoke(
                     DispatcherPriority.Normal, (Action)delegate()
                     {
-                        foreach (string item in list)
+                        if (regex.IsMatch(serialData))
                         {
-                            if (regex.IsMatch(item))
-                            {
-                                serialDataModel = new SerialDataModel();
-                                serialDataModel.Name = item.Split(',')[0];
-                                serialDataModel.Value = Convert.ToInt32(item.Split(',')[1]);
-                                DataCollection.Add(serialDataModel);
-                            }
+                            serialDataModel = new SerialDataModel();
+                            serialDataModel.Name = serialData.Split(',')[0];
+                            serialDataModel.Value = Convert.ToInt32(serialData.Split(',')[1]);
+                            DataCollection.Add(serialDataModel);
                         }
                     });
             }

@@ -10,6 +10,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace AUHTC
@@ -24,41 +25,30 @@ namespace AUHTC
 
         private void connStart_Click(object sender, RoutedEventArgs e)
         {
-            App.ViewModel.ReadDataFromPort(PortNamesCombobox.SelectedItem.ToString(), BaudRatesCombobox.SelectedItem.ToString());
-        }
-
-        private void PortNamesCombobox_Loaded(object sender, RoutedEventArgs e)
-        {
-            PortNamesCombobox.SelectedItem = App.DefaultPortName;
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            SaveSettings();
-        }
-
-        private void SaveSettings()
-        {
-            Properties.Settings.Default.DefaultPortName = PortNamesCombobox.SelectedItem.ToString();
-            Properties.Settings.Default.Save();
-        }
-
-        private void BaudRateCombobox_Loaded(object sender, RoutedEventArgs e)
-        {
-            BaudRatesCombobox.SelectedItem = App.DefaultBaudRate;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            screen.DataContext = App.ViewModel;//.DataCollection;
+            App.ViewModel.ReadDataFromPort(Properties.Settings.Default.DefaultPortName, Properties.Settings.Default.DefaultBaudRate.ToString());
+            SettingsButton.IsEnabled = false;
+            connStart.Visibility = Visibility.Hidden;
+            connEnd.Visibility = Visibility.Visible;
         }
 
         private void connEnd_Click(object sender, RoutedEventArgs e)
         {
-            string totalData = App.ViewModel.EndDataRead();
-            //System.Collections.ObjectModel.ObservableCollection<Model.SerialDataModel> sm = App.ViewModel.DataCollection;
-            MessageBox.Show(totalData);
-            //Test for Github
+            App.ViewModel.EndDataRead();
+            SettingsButton.IsEnabled = true;
+            connStart.Visibility = Visibility.Visible;
+            connEnd.Visibility = Visibility.Hidden;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            screen.DataContext = App.ViewModel;
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            AUHTC.View.Settings settingsWindow = new AUHTC.View.Settings(this);
+            this.IsEnabled = false;
+            settingsWindow.ShowDialog();
         }
     }
 }

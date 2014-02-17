@@ -3,12 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="View/AnkaFelix.xaml">
     <Application.Resources>
-        <!--Style <TargetType="{x:Type TextBlock}">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="true">
-                    <Setter Property="Text" Value="furkan"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>-->
+        
     </Application.Resources>
 </Application>
