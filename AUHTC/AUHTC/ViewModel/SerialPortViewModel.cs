@@ -15,18 +15,13 @@ namespace AUHTC.ViewModel
 {
     public class SerialPortViewModel : INotifyPropertyChanged
     {
-        // Variables And Properties
-        public event PropertyChangedEventHandler PropertyChanged;
         Regex regex = new Regex(@"([A-Z]{9},[0-9][0-9][0-9])");
 
-        private SerialPort serial;
-        private SerialDataModel serialDataModel;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        private string serialData;
-        public string SerialData
-        {
-            get { return serialData; }
-        }
+        private SerialDataModel serialDataModel;
+        private SerialPort serialPort;
+        private string recievedData;
 
         private ObservableCollection<SerialDataModel> dataCollection;
         public ObservableCollection<SerialDataModel> DataCollection
@@ -42,18 +37,19 @@ namespace AUHTC.ViewModel
             }
         }
 
-        public void ReadDataFromPort(string portName, string baudRate)
+        public bool ReadDataFromPort(string portName, string baudRate)
         {
-            serial = new SerialPort();
+            serialPort = new SerialPort();
             try
             {
-                serial.PortName = portName;
-                serial.BaudRate = Convert.ToInt32(baudRate);
-                serial.NewLine = "\r";
-                serial.Open();
+                serialPort.PortName = portName;
+                serialPort.BaudRate = Convert.ToInt32(baudRate);
+                serialPort.NewLine = "\r";
+                serialPort.Open();
 
-                //DataCollection = new ObservableCollection<SerialDataModel>(); //Metod çağrıldığında nesne oluşur.
-                serial.DataReceived += new SerialDataReceivedEventHandler(RecieveData);
+                DataCollection = new ObservableCollection<SerialDataModel>(); //Metod çağrıldığında nesne oluşur.
+                serialPort.DataReceived += new SerialDataReceivedEventHandler(RecieveData);
+                return true;
             }
             catch (Exception excp)
             {
@@ -74,24 +70,25 @@ namespace AUHTC.ViewModel
                         ReadDataFromPort(openPort, baudRate);
                     }
                 }
+                return false;
             }
         }
 
         private void RecieveData(object sender, SerialDataReceivedEventArgs e)
         {
-            DataCollection = new ObservableCollection<SerialDataModel>();  // Event her handle edilişinde yeni nesne oluşur.
-
+            //DataCollection = new ObservableCollection<SerialDataModel>();  // Event her handle edilişinde yeni nesne oluşur.
             try
             {
-                serialData = serial.ReadLine().Trim('$');
+                recievedData = serialPort.ReadLine().Trim('$');
                 System.Windows.Application.Current.Dispatcher.Invoke(
                     DispatcherPriority.Normal, (Action)delegate()
                     {
-                        if (regex.IsMatch(serialData))
+                        if (regex.IsMatch(recievedData))
                         {
                             serialDataModel = new SerialDataModel();
-                            serialDataModel.Name = serialData.Split(',')[0];
-                            serialDataModel.Value = Convert.ToInt32(serialData.Split(',')[1]);
+                            serialDataModel.Name = recievedData.Split(',')[0];
+                            serialDataModel.Value = Convert.ToInt32(recievedData.Split(',')[1]);
+                            serialDataModel.RecordDate = DateTime.Now;
                             DataCollection.Add(serialDataModel);
                         }
                     });
@@ -110,15 +107,14 @@ namespace AUHTC.ViewModel
             }
         }
 
-        internal string EndDataRead()
+        internal void EndDataRead()
         {
-            string x = "Bağlantı Sonlandı!\n";
-            foreach (SerialDataModel item in DataCollection)
+            serialPort.Close();
+            EntityViewModel database = new EntityViewModel();
+            foreach (SerialDataModel data in DataCollection)
             {
-                x += item.Name + "-" + item.Value.ToString() + "\n";
+                database.AddDataToDB(data);
             }
-            serial.Close();
-            return x;
         }
     }
 }

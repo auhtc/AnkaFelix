@@ -25,10 +25,12 @@ namespace AUHTC
 
         private void connStart_Click(object sender, RoutedEventArgs e)
         {
-            App.ViewModel.ReadDataFromPort(Properties.Settings.Default.DefaultPortName, Properties.Settings.Default.DefaultBaudRate.ToString());
-            SettingsButton.IsEnabled = false;
-            connStart.Visibility = Visibility.Hidden;
-            connEnd.Visibility = Visibility.Visible;
+            if (App.ViewModel.ReadDataFromPort(Properties.Settings.Default.DefaultPortName, Properties.Settings.Default.DefaultBaudRate.ToString()))
+            {
+                SettingsButton.IsEnabled = false;
+                connStart.Visibility = Visibility.Hidden;
+                connEnd.Visibility = Visibility.Visible;
+            }
         }
 
         private void connEnd_Click(object sender, RoutedEventArgs e)
