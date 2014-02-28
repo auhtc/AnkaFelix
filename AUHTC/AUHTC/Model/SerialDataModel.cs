@@ -15,5 +15,7 @@ namespace AUHTC.Model
         public int Value { get; set; }
 
         public DateTime RecordDate { get; set; }
+
+        public string RaceName { get; set; }
     }
 }
