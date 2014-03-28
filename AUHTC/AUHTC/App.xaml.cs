@@ -1,4 +1,5 @@
-﻿using AUHTC.ViewModel;
+﻿using AUHTC.Model;
+using AUHTC.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -15,6 +16,12 @@ namespace AUHTC
         public static SerialPortViewModel ViewModel
         {
             get { return viewModel; }
+        }
+
+        private static MapModel map;
+        public static MapModel Map
+        {
+            get { return map; }
         }
 
         private static List<string> portNames;
