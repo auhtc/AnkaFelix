@@ -18,10 +18,10 @@ namespace AUHTC
             get { return viewModel; }
         }
 
-        private static MapModel map;
-        public static MapModel Map
+        private static MapViewModel mapModel;
+        public static MapViewModel MapModel
         {
-            get { return map; }
+            get { return mapModel; }
         }
 
         private static List<string> portNames;
@@ -57,6 +57,7 @@ namespace AUHTC
             defaultBaudRate = AUHTC.Properties.Settings.Default.DefaultBaudRate;
 
             viewModel = new SerialPortViewModel();
+            mapModel = new MapViewModel();
         }
     }
 }

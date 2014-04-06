@@ -65,6 +65,7 @@
     <Compile Include="Model\SerialDataModel.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\EntityViewModel.cs" />
+    <Compile Include="ViewModel\MapViewModel.cs" />
     <Compile Include="ViewModel\SerialPortViewModel.cs" />
     <Compile Include="View\AnkaFelix.xaml.cs">
       <DependentUpon>AnkaFelix.xaml</DependentUpon>
@@ -72,6 +73,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="View\Map.xaml.cs">
+      <DependentUpon>Map.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
@@ -107,6 +111,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="View\AnkaFelix.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Map.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

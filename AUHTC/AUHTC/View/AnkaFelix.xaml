@@ -61,5 +61,14 @@
             Width="130"
             Click="SettingsButton_Click">
         </Button>
+        <Button
+        	x:Name="mapStart"
+        	Content="MAP"
+        	HorizontalAlignment="Left"
+        	VerticalAlignment="Top"
+        	Width="130"
+        	Margin="82,225,0,0"
+        	Click="mapStart_Click"
+        	Visibility="Visible"/>
     </Grid>
 </Window>

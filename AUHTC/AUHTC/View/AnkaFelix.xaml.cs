@@ -52,5 +52,12 @@ namespace AUHTC
             this.IsEnabled = false;
             settingsWindow.ShowDialog();
         }
+
+        private void mapStart_Click(object sender, RoutedEventArgs e)
+        {
+            AUHTC.View.Map mapWindow = new AUHTC.View.Map(this);
+            this.Hide();
+            mapWindow.ShowDialog();
+        }
     }
 }
