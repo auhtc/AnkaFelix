@@ -39,7 +39,9 @@
         <Label x:Name="lbl1"
                Height="150"
                Width="50"
-               Margin="{Binding Margin}"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Margin="{Binding Margin_1}"
                BorderBrush="Beige"
                Background="Red"
             ></Label>

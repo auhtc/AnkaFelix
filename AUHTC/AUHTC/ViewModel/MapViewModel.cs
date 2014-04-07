@@ -24,7 +24,7 @@ namespace AUHTC.ViewModel
         //private MapModel mapModel;
 
         private Thickness margin;// = new MapModel();
-        public Thickness Margin
+        public Thickness Margin_1
         {
             get { return margin; }
             set
@@ -32,7 +32,7 @@ namespace AUHTC.ViewModel
                 if (value != margin)
                 {
                     margin = value;
-                    NotifyPropertyChanged("Margin");
+                    NotifyPropertyChanged("Margin_1");
                 }
             }
         }
@@ -66,6 +66,8 @@ namespace AUHTC.ViewModel
         {
             margin.Left = temp_x;
             margin.Top = temp_y;
+            margin.Bottom = 0;
+            margin.Right = 0;
             dataCollection = new MapModel();
             dataCollection.KoorX = temp_x++;
             dataCollection.KoorY = temp_y++;
