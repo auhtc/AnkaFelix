@@ -64,14 +64,18 @@ namespace AUHTC.ViewModel
         }
         public void func()
         {
-            margin.Left = temp_x;
-            margin.Top = temp_y;
-            margin.Bottom = 0;
-            margin.Right = 0;
+            Thickness t = new Thickness();
             dataCollection = new MapModel();
             dataCollection.KoorX = temp_x++;
             dataCollection.KoorY = temp_y++;
             //DataCollection.Add(mapModel);
+
+            t.Left = temp_x;
+            t.Top = temp_y;
+            t.Bottom = 0;
+            t.Right = 0;
+
+            Margin_1 = t;
         }
     }
 }
