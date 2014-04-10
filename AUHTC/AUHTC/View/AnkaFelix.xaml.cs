@@ -35,6 +35,7 @@ namespace AUHTC
 
         private void connEnd_Click(object sender, RoutedEventArgs e)
         {
+            App.ViewModel.EndDataRead();
             SettingsButton.IsEnabled = true;
             connStart.Visibility = Visibility.Visible;
             connEnd.Visibility = Visibility.Hidden;

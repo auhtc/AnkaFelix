@@ -10,7 +10,5 @@ namespace AUHTC.Model.Repository
     public class SerialDataRepository : DbContext
     {
         public DbSet<SerialDataModel> SerialData { get; set; }
-
-        public DbSet<IncorrectDataModel> IncorrectData { get; set; }
     }
 }

@@ -18,14 +18,9 @@ namespace AUHTC.ViewModel
             entity.Database.CreateIfNotExists();
         }
 
-        internal void AddSerialDataToDB(SerialDataModel data)
+        internal void AddDataToDB(SerialDataModel data)
         {
             entity.SerialData.Add(data);
-        }
-
-        internal void AddIncorrectDataToDB(IncorrectDataModel data)
-        {
-            entity.IncorrectData.Add(data);
         }
 
         internal void RemoveDataFromDB(SerialDataModel data)

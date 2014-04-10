@@ -60,7 +60,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\IncorrectDataModel.cs" />
     <Compile Include="Model\MapModel.cs" />
     <Compile Include="Model\Repository\SerialDataRepository.cs" />
     <Compile Include="Model\SerialDataModel.cs" />
@@ -125,7 +124,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\2048.jpg" />
     <Resource Include="View\map.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
