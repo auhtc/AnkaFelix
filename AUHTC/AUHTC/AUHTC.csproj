@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\IncorrectDataModel.cs" />
     <Compile Include="Model\MapModel.cs" />
     <Compile Include="Model\Repository\SerialDataRepository.cs" />
     <Compile Include="Model\SerialDataModel.cs" />
@@ -123,7 +124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="View\2048.jpg" />
+    <Resource Include="View\map.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,60 +1,38 @@
-﻿using AUHTC.Model;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Threading;
+using System.ComponentModel;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace AUHTC.ViewModel
 {
     public class MapViewModel : INotifyPropertyChanged 
     {
-        Regex regex = new Regex(@"([A-Z]{9},[0-9][0-9][0-9])");
+        private Point Offset1 { get; set; }
+        private Point Offset2 { get; set; }
+        private double RatioX { get; set; }
+        private double RatioY { get; set; }
+
+        public StreamReader ReadFile;
+        
+        Regex regex = new Regex(@"(\$[A-Z]{1,},[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4})");
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        //private MapModel mapModel;
-
-        private Thickness margin;// = new MapModel();
-        public Thickness Margin_1
+        private Thickness koor;
+        public Thickness Koor
         {
-            get { return margin; }
+            get { return koor; }
             set
             {
-                if (value != margin)
+                if (value != koor)
                 {
-                    margin = value;
-                    NotifyPropertyChanged("Margin_1");
+                    koor = value;
+                    NotifyPropertyChanged("Koor");
                 }
             }
         }
 
-
-
-        private int temp_x = 0;
-        private int temp_y = 0;
-
-        private MapModel dataCollection;// = new MapModel();
-        public MapModel DataCollection
-        {
-            get { return dataCollection; }
-            set
-            {
-                if (value != dataCollection)
-                {
-                    dataCollection = value;
-                    NotifyPropertyChanged("DataCollection");
-                }
-            }
-        }
         protected void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
@@ -62,20 +40,32 @@ namespace AUHTC.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        public void func()
+        private void Marker(int x,int y)
         {
-            Thickness t = new Thickness();
-            dataCollection = new MapModel();
-            dataCollection.KoorX = temp_x++;
-            dataCollection.KoorY = temp_y++;
-            //DataCollection.Add(mapModel);
+            Koor = new Thickness(y, x, 0, 0);
+        }
 
-            t.Left = temp_x;
-            t.Top = temp_y;
-            t.Bottom = 0;
-            t.Right = 0;
+        public bool ReadData()
+        {
+            string text = ReadFile.ReadLine();
+            Offset1 = new Point(3978242, 3281838);
+            Offset2 = new Point(3978033, 3282213);
 
-            Margin_1 = t;
+            Point Offset = new Point((Offset2.X - Offset1.X), (Offset2.Y - Offset1.Y));
+            RatioX = 507 / Offset.X;
+            RatioY = 700 / Offset.Y;
+            Regex regex = new Regex(@"\$[A-Z]{1,},[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4}");
+                if (text == null)
+                    return false;
+
+                if (regex.IsMatch(text))
+                {
+                    string[] words = text.Split(',');
+                    int KoorX = (int.Parse(words[3].Substring(0, 2)) * 100000) + (int)((float.Parse((words[3].Replace(".", ",")).Substring(2, words[3].Length - 3)) / 60) * 100000);
+                    int KoorY = (int.Parse(words[5].Substring(0, 3)) * 100000) + (int)((float.Parse((words[5].Replace(".", ",")).Substring(3, words[5].Length - 4)) / 60) * 100000);
+                    Marker((int)((KoorX - Offset1.X) * RatioX), (int)((KoorY - Offset1.Y) * RatioY));
+                }
+                return true;
         }
     }
 }

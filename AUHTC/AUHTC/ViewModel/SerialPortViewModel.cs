@@ -90,13 +90,19 @@ namespace AUHTC.ViewModel
                             serialDataModel.Value = Convert.ToInt32(recievedData.Split(',')[1]);
                             serialDataModel.RecordDate = DateTime.Now;
                             DataCollection.Add(serialDataModel);
+                            AddDataToDB(serialDataModel);
                         }
                     });
             }
             catch
             {
-                EndDataRead();
             }
+        }
+
+        private void AddDataToDB(SerialDataModel serialDataModel)
+        {
+            EntityViewModel database = new EntityViewModel();
+            database.AddSerialDataToDB(serialDataModel);
         }
 
         protected void NotifyPropertyChanged(string propertyName)
@@ -104,16 +110,6 @@ namespace AUHTC.ViewModel
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        internal void EndDataRead()
-        {
-            serialPort.Close();
-            EntityViewModel database = new EntityViewModel();
-            foreach (SerialDataModel data in DataCollection)
-            {
-                database.AddDataToDB(data);
             }
         }
     }
