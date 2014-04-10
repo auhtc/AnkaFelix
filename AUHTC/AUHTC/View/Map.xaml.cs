@@ -21,7 +21,7 @@ namespace AUHTC.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            App.MapModel.ReadFile = File.OpenText("a.txt");
+            App.MapModel.ReadFile = File.OpenText("../../MediaFiles/a.txt");
             thread = new Thread(new ThreadStart(delegate
             {
                 while (true)

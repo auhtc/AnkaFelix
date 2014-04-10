@@ -5,7 +5,7 @@
         Title="Map" Height="574" Width="721"
         Loaded="Window_Loaded" Unloaded="Window_Unloaded">
     <Grid>
-        <Image x:Name="map" HorizontalAlignment="Left" Height="507" VerticalAlignment="Top" Width="700" Source="map.png"/>
+        <Image x:Name="map" HorizontalAlignment="Left" Height="507" VerticalAlignment="Top" Width="700" Source="/MediaFiles/map.png"/>
         <Label Height="5" Width="5" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Red" Margin="{Binding Koor}"/>
     </Grid>
 </Window>
