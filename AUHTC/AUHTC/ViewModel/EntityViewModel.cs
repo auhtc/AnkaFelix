@@ -18,19 +18,19 @@ namespace AUHTC.ViewModel
             entity.Database.CreateIfNotExists();
         }
 
-        internal void AddDataToDB(SerialDataModel data)
+        internal void AddDataToDB(ProcessedDataModel data)
         {
             entity.SerialData.Add(data);
         }
 
-        internal void RemoveDataFromDB(SerialDataModel data)
+        internal void RemoveDataFromDB(ProcessedDataModel data)
         {
             entity.SerialData.Remove(data);
         }
 
-        internal List<SerialDataModel> GetDataListByDate(DateTime date)
+        internal List<ProcessedDataModel> GetDataListByDate(DateTime date)
         {
-            List<SerialDataModel> dataList = new List<SerialDataModel>();
+            List<ProcessedDataModel> dataList = new List<ProcessedDataModel>();
             var query = from data in entity.SerialData
                         where data.RecordDate == date
                         select data;
@@ -43,7 +43,7 @@ namespace AUHTC.ViewModel
             return dataList;
         }
 
-        internal List<SerialDataModel> GetAll()
+        internal List<ProcessedDataModel> GetAll()
         {
             return entity.SerialData.ToList();
         }

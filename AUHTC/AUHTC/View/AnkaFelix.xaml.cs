@@ -25,6 +25,8 @@ namespace AUHTC
 
         private void connStart_Click(object sender, RoutedEventArgs e)
         {
+            ProcessedDataViews.DataContext = App.ViewModel.Data;
+
             if (App.ViewModel.ReadDataFromPort(Properties.Settings.Default.DefaultPortName, Properties.Settings.Default.DefaultBaudRate.ToString()))
             {
                 SettingsButton.IsEnabled = false;
@@ -39,11 +41,6 @@ namespace AUHTC
             SettingsButton.IsEnabled = true;
             connStart.Visibility = Visibility.Visible;
             connEnd.Visibility = Visibility.Hidden;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            screen.DataContext = App.ViewModel;
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

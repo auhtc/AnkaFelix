@@ -62,7 +62,7 @@
     </ApplicationDefinition>
     <Compile Include="Model\MapModel.cs" />
     <Compile Include="Model\Repository\SerialDataRepository.cs" />
-    <Compile Include="Model\SerialDataModel.cs" />
+    <Compile Include="Model\ProcessedDataModel.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\EntityViewModel.cs" />
     <Compile Include="ViewModel\MapViewModel.cs" />

@@ -2,38 +2,18 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="AnkaFelix" Height="300" Width="300"
-        Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <DataTemplate x:Key="ListBoxTemplate">
-            <Grid HorizontalAlignment="Stretch" Width="Auto">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="100" />
-                </Grid.ColumnDefinitions>
-                <TextBlock 
-                    Text="{Binding Name}"
-                    Grid.Column="0"
-                    VerticalAlignment="Top" Margin="0, 0, 0, 0"
-                    Foreground="Black"/>
-                <TextBlock 
-                    Text="{Binding Value}"
-                    Grid.Column="1"
-                    VerticalAlignment="Top" Margin="0, 0, 0, 0"
-                    Foreground="Black"/>
-            </Grid>
-        </DataTemplate>
-    </Window.Resources>
     <Grid>
-        <ListBox x:Name="screen"
-                 Margin="0,10,0,0"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Top"
-                 Height="150"
-                 ItemsSource="{Binding DataCollection}"
-                 ItemTemplate="{StaticResource ListBoxTemplate}"
-                 Width="270">
-        </ListBox>
+        <Grid x:Name="ProcessedDataViews" Margin="10,10,10,75">
+            <TextBlock x:Name="Name_txtblck2" Text="Name:" Margin="0,10,177,145"></TextBlock>
+            <TextBlock x:Name="Name_txtblck" Text="{Binding Name}" Margin="100,10,10,145"></TextBlock>
+            <TextBlock x:Name="Value_txtblck2" Text="Value:" Margin="0,50,177,105"></TextBlock>
+            <TextBlock x:Name="Value_txtblck" Text="{Binding Value}" Margin="100,50,10,105"></TextBlock>
+            <TextBlock x:Name="RecordDate_txtblck2" Text="Rec Date:" Margin="0,90,177,65"></TextBlock>
+            <TextBlock x:Name="RecordDate_txtblck" Text="{Binding RecordDate}" Margin="100,90,10,65"></TextBlock>
+            <TextBlock x:Name="RaceName_txtblck2" Text="Race Name:" Margin="0,130,177,25"></TextBlock>
+            <TextBlock x:Name="RaceName_txtblck" Text="{Binding RaceName}" Margin="100,130,10,25"></TextBlock>
+        </Grid>
         <Button
             x:Name="connStart"
             Content="Bağlan"

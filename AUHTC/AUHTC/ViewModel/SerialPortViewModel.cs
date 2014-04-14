@@ -15,30 +15,50 @@ namespace AUHTC.ViewModel
 {
     public class SerialPortViewModel : INotifyPropertyChanged
     {
-        Regex regex = new Regex(@"([A-Z]{9},[0-9][0-9][0-9])");
+        Regex rgx_StandartData = new Regex(@"([A-Z]{9},[0-9][0-9][0-9])");
+        Regex rgx_GPSData = new Regex(@"(\$[A-Z]{1,},[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4})");
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private SerialDataModel serialDataModel;
+        private ProcessedDataModel processedData;
         private SerialPort serialPort;
+        private EntityViewModel database;
         private string recievedData;
 
-        private ObservableCollection<SerialDataModel> dataCollection;
-        public ObservableCollection<SerialDataModel> DataCollection
+        //private ObservableCollection<ProcessedDataModel> dataCollection;
+        //public ObservableCollection<ProcessedDataModel> DataCollection
+        //{
+        //    get { return dataCollection; }
+        //    set
+        //    {
+        //        if (value != dataCollection)
+        //        {
+        //            dataCollection = value;
+        //            NotifyPropertyChanged("DataCollection");
+        //        }
+        //    }
+        //}
+
+        private ProcessedDataModel data;
+        public ProcessedDataModel Data
         {
-            get { return dataCollection; }
+            get
+            {
+                return data;
+            }
             set
             {
-                if (value != dataCollection)
+                if (value != data)
                 {
-                    dataCollection = value;
-                    NotifyPropertyChanged("DataCollection");
+                    data = value;
+                    NotifyPropertyChanged("Data");
                 }
             }
         }
 
         public bool ReadDataFromPort(string portName, string baudRate)
         {
+            database = new EntityViewModel();
             serialPort = new SerialPort();
             try
             {
@@ -47,7 +67,6 @@ namespace AUHTC.ViewModel
                 serialPort.NewLine = "\r";
                 serialPort.Open();
 
-                DataCollection = new ObservableCollection<SerialDataModel>(); //Metod çağrıldığında nesne oluşur.
                 serialPort.DataReceived += new SerialDataReceivedEventHandler(RecieveData);
                 return true;
             }
@@ -76,20 +95,36 @@ namespace AUHTC.ViewModel
 
         private void RecieveData(object sender, SerialDataReceivedEventArgs e)
         {
-            //DataCollection = new ObservableCollection<SerialDataModel>();  // Event her handle edilişinde yeni nesne oluşur.
             try
             {
                 recievedData = serialPort.ReadLine().Trim('$');
                 System.Windows.Application.Current.Dispatcher.Invoke(
                     DispatcherPriority.Normal, (Action)delegate()
                     {
-                        if (regex.IsMatch(recievedData))
+                        data = new ProcessedDataModel();
+
+                        if (rgx_StandartData.IsMatch(recievedData))
                         {
-                            serialDataModel = new SerialDataModel();
-                            serialDataModel.Name = recievedData.Split(',')[0];
-                            serialDataModel.Value = Convert.ToInt32(recievedData.Split(',')[1]);
-                            serialDataModel.RecordDate = DateTime.Now;
-                            DataCollection.Add(serialDataModel);
+                            data.Name = recievedData.Split(',')[0];
+                            data.Value = Convert.ToInt32(recievedData.Split(',')[1]);
+                            data.RecordDate = DateTime.Now;
+                            data.Type = "Standart Data";
+                            SaveDataToDb(data);
+                        }
+                        else if (rgx_GPSData.IsMatch(recievedData))
+                        {
+                            //recievedData App.MapModel.MapModel değişkenini dolduracak şekilde split edilecek
+
+                            data.RecordDate = DateTime.Now;
+                            data.Type = "GPS Data";
+                            SaveDataToDb(data);
+                        }
+                        else
+                        {
+                            Data.Dump = recievedData;
+                            data.RecordDate = DateTime.Now;
+                            data.Type = "Incorrect Data";
+                            SaveDataToDb(data);
                         }
                     });
             }
@@ -97,6 +132,11 @@ namespace AUHTC.ViewModel
             {
                 EndDataRead();
             }
+        }
+
+        private void SaveDataToDb(ProcessedDataModel data)
+        {
+            database.AddDataToDB(data);
         }
 
         protected void NotifyPropertyChanged(string propertyName)
@@ -110,11 +150,6 @@ namespace AUHTC.ViewModel
         internal void EndDataRead()
         {
             serialPort.Close();
-            EntityViewModel database = new EntityViewModel();
-            foreach (SerialDataModel data in DataCollection)
-            {
-                database.AddDataToDB(data);
-            }
         }
     }
 }
