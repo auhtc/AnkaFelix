@@ -60,7 +60,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\MapModel.cs" />
     <Compile Include="Model\Repository\SerialDataRepository.cs" />
     <Compile Include="Model\ProcessedDataModel.cs" />
     <Compile Include="Settings.cs" />
