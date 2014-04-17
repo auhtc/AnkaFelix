@@ -1,0 +1,13 @@
+﻿<Window x:Class="AUHTC.View.Main"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Model="clr-namespace:AUHTC.Model"
+        Title="Main" Height="308" Width="870"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" BorderThickness="0" AllowsTransparency="True" WindowStyle="None" SnapsToDevicePixels="True" >
+    <Window.Background>
+        <ImageBrush ImageSource="../MediaFiles/Background.png" Opacity="{Binding MainOpacity}"/>
+    </Window.Background>
+    <Grid>
+        
+    </Grid>
+</Window>

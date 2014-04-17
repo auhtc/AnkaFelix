@@ -24,6 +24,12 @@ namespace AUHTC
             get { return mapModel; }
         }
 
+        private static MainViewModel mainModel;
+        public static MainViewModel MainModel
+        {
+            get { return mainModel; }
+        }
+
         private static List<string> portNames;
         public static List<string> PortNames
         {
@@ -58,6 +64,7 @@ namespace AUHTC
 
             viewModel = new SerialPortViewModel();
             mapModel = new MapViewModel();
+            mainModel = new MainViewModel();
         }
     }
 }
