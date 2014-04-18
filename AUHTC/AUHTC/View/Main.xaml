@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Model="clr-namespace:AUHTC.Model"
         Title="Main" Height="308" Width="870"
+        Loaded="Window_Loaded"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" BorderThickness="0" AllowsTransparency="True" WindowStyle="None" SnapsToDevicePixels="True" >
     <Window.Background>
         <ImageBrush ImageSource="../MediaFiles/Background.png" Opacity="{Binding MainOpacity}"/>

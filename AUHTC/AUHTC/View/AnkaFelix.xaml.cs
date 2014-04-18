@@ -13,15 +13,30 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace AUHTC
 {
     public partial class AnkaFelix : Window
     {
+
+        Main mn;
         public AnkaFelix()
         {
             InitializeComponent();
             this.DataContext = App.ViewModel;
+            Animation();
+        }
+
+        private void Animation()
+        {
+            this.Visibility = Visibility.Hidden;
+            mn = new Main(this);
+            mn.Show();
+            DispatcherTimer tm = new DispatcherTimer();
+            tm.Tick += new EventHandler(tm_Tick);
+            tm.Interval = new TimeSpan(0, 0, 5);
+            tm.Start();
         }
 
         private void connStart_Click(object sender, RoutedEventArgs e)
@@ -53,10 +68,15 @@ namespace AUHTC
 
         private void mapStart_Click(object sender, RoutedEventArgs e)
         {
-
             AUHTC.View.Map mapWindow = new AUHTC.View.Map(this);
             this.Hide();
             mapWindow.ShowDialog();
+        }
+
+        private void tm_Tick(object sender, EventArgs e)
+        {
+            mn.Close();
+            this.Visibility = Visibility.Visible;
         }
     }
 }
