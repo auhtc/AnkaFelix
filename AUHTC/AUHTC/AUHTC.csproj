@@ -138,6 +138,12 @@
     <Resource Include="MediaFiles\Background.jpg" />
     <Resource Include="MediaFiles\Background.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\İndirilenler\WpfGauge\WpfGauge\WpfGauge.csproj">
+      <Project>{E909601A-C92E-48F6-A792-1DC4C66B0624}</Project>
+      <Name>WpfGauge</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

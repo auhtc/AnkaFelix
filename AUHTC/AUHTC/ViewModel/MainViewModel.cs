@@ -13,18 +13,15 @@ namespace AUHTC.ViewModel
         private delegate void NoArgDelegate();
         public MainViewModel()
         {
-            Thread thread = new Thread(new ThreadStart(delegate
-            {
-                while (mainopacity != 700)
-                {
-                    Thread.Sleep(2);
-                    MainOpacity = mainopacity + 1;
-                }
-
-                //AnkaFelix frm = new AnkaFelix();
-                //frm.Show();
-            }));
-            thread.Start();
+            //Thread thread = new Thread(new ThreadStart(delegate
+            //{
+            //    while (mainopacity != 700)
+            //    {
+            //        Thread.Sleep(2);
+            //        MainOpacity = mainopacity + 1;
+            //    }
+            //}));
+            //thread.Start();
         }
 
         private double mainopacity;
