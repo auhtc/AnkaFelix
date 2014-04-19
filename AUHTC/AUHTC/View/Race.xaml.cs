@@ -25,10 +25,12 @@ namespace AUHTC.View
     public partial class Race : Window
     {
         Thread thread;
-        public Race()
+        AnkaFelix Parent;
+        public Race(AnkaFelix parent)
         {
             InitializeComponent();
             this.DataContext = App.MapModel;
+            Parent = parent;
         }
         DispatcherTimer timer1 = new DispatcherTimer();
         DateTime end;
@@ -70,10 +72,13 @@ namespace AUHTC.View
             RaceStart.Visibility = Visibility.Hidden;
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
-            thread.Abort();
+            if (thread != null)
+                thread.Abort();
             timer1.Stop();
+            App.MapModel.ReadFile = null;
+            Parent.Show();
         }
     }
 }

@@ -110,10 +110,11 @@ namespace AUHTC.ViewModel
                             data.RecordDate = DateTime.Now;
                             data.Type = "Standart Data";
                             SaveDataToDb(data);
+                            // Data hiç değişmemiş bind eder mi?
                         }
                         else if (rgx_GPSData.IsMatch(recievedData))
                         {
-                            //recievedData App.MapModel.MapModel değişkenini dolduracak şekilde split edilecek
+                            //TODO recievedData App.MapModel.MapModel değişkenini dolduracak şekilde split edilecek
 
                             data.RecordDate = DateTime.Now;
                             data.Type = "GPS Data";
@@ -130,7 +131,7 @@ namespace AUHTC.ViewModel
             }
             catch
             {
-                EndDataRead();
+                EndDataRead(); //TODO Araç bağlantısı koparsa bağlantıyı komple kapatıyor.
             }
         }
 

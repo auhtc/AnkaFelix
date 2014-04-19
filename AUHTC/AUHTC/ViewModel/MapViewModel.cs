@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace AUHTC.ViewModel
 {
-    public class MapViewModel : INotifyPropertyChanged 
+    public class MapViewModel : INotifyPropertyChanged
     {
         private Point Offset1 { get; set; }
         private Point Offset2 { get; set; }
@@ -42,18 +42,19 @@ namespace AUHTC.ViewModel
         }
         private void Marker(int x,int y)
         {
+            //TODO MapImage.top ve MapImage.left ihtiyaç! Kayma oluyor markerda
             Koor = new Thickness(y, x, 0, 0);
         }
 
         public bool ReadData()
         {
             string text = ReadFile.ReadLine();
-            Offset1 = new Point(3978242, 3281838);
-            Offset2 = new Point(3978033, 3282213);
+            Offset1 = new Point(3978242, 3281838); //TODO ayar dosyasından okunacak
+            Offset2 = new Point(3978033, 3282213); //TODO ayar dosyasından okunacak
 
             Point Offset = new Point((Offset2.X - Offset1.X), (Offset2.Y - Offset1.Y));
-            RatioX = 507 / Offset.X;
-            RatioY = 700 / Offset.Y;
+            RatioX = 507 / Offset.X; //TODO 507 yerine MapImage.height şart
+            RatioY = 700 / Offset.Y; //TODO 700 yerine MapImage.width şart
             Regex regex = new Regex(@"\$[A-Z]{1,},[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4}");
                 if (text == null)
                     return false;
