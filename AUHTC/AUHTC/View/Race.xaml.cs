@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,51 +24,56 @@ namespace AUHTC.View
     /// </summary>
     public partial class Race : Window
     {
+        Thread thread;
         public Race()
         {
             InitializeComponent();
+            this.DataContext = App.MapModel;
         }
         DispatcherTimer timer1 = new DispatcherTimer();
-        int tik = 60;
-        int min = 1;
-        int number;
-
+        DateTime end;
+        string format = "mm:ss.fff";
 
         void timer1_Tick(Object sender, EventArgs e)
         {
-            if (tik < 10)
-            {
-                CountdownTextBlock.Text = "0" + min.ToString() + ":" + "0" + tik.ToString();
-                CountdownTextBlock.FontFamily = new FontFamily("/Fonts/digital-7.ttf#Digital-7");
-            }
-            else
-                if (tik == 60)
-                {
-                    CountdownTextBlock.Text = "0" + min.ToString() + ":" + "00";
-                    CountdownTextBlock.FontFamily = new FontFamily("/Fonts/digital-7.ttf#Digital-7");
-                }
-                else
-                {
-                    CountdownTextBlock.Text = "0" + min.ToString() + ":" + tik.ToString();
-                    CountdownTextBlock.FontFamily = new FontFamily("/Fonts/digital-7.ttf#Digital-7");
-                }
-            if (tik > 0)
-            {
-                tik--;
-                if (min > 0)
-                    min--;
-
-            }
-            //else
-
-            //    NavigationService.GoBack();
+            CountdownTextBlock.Text = string.Format("{0:" + format.Replace(":", "\\:").Replace(".", "\\.") + "}", end - DateTime.Now);
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void RaceStop_Click(object sender, RoutedEventArgs e)
         {
-            timer1.Interval = new TimeSpan(0, 0, 0, 1);
+            thread.Abort();
+            timer1.Stop();
+            App.MapModel.ReadFile = null;
+            RaceStart.Visibility = Visibility.Visible;
+            RaceStop.Visibility = Visibility.Hidden;
+        }
+
+        private void RaceStart_Click(object sender, RoutedEventArgs e)
+        {
+            end = DateTime.Now.AddMinutes(39);
+            timer1.Interval = new TimeSpan(0, 0, 0, 0, 10);
             timer1.Tick += new EventHandler(timer1_Tick);
             timer1.Start();
+
+            App.MapModel.ReadFile = File.OpenText("../../MediaFiles/c.txt");
+            thread = new Thread(new ThreadStart(delegate
+            {
+                while (true)
+                {
+                    if (!App.MapModel.ReadData())
+                        thread.Abort();
+                    Thread.Sleep(100);
+                }
+            }));
+            thread.Start();
+            RaceStop.Visibility = Visibility.Visible;
+            RaceStart.Visibility = Visibility.Hidden;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            thread.Abort();
+            timer1.Stop();
         }
     }
 }
