@@ -10,7 +10,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace AUHTC.View
 {
@@ -22,6 +24,48 @@ namespace AUHTC.View
         public Race()
         {
             InitializeComponent();
+        }
+        DispatcherTimer timer1 = new DispatcherTimer();
+        int tik = 60;
+        int min = 1;
+        int number;
+
+
+        void timer1_Tick(Object sender, EventArgs e)
+        {
+            if (tik < 10)
+            {
+                CountdownTextBlock.Text = "0" + min.ToString() + ":" + "0" + tik.ToString();
+                CountdownTextBlock.FontFamily = new FontFamily("/Fonts/digital-7.ttf#Digital-7");
+            }
+            else
+                if (tik == 60)
+                {
+                    CountdownTextBlock.Text = "0" + min.ToString() + ":" + "00";
+                    CountdownTextBlock.FontFamily = new FontFamily("/Fonts/digital-7.ttf#Digital-7");
+                }
+                else
+                {
+                    CountdownTextBlock.Text = "0" + min.ToString() + ":" + tik.ToString();
+                    CountdownTextBlock.FontFamily = new FontFamily("/Fonts/digital-7.ttf#Digital-7");
+                }
+            if (tik > 0)
+            {
+                tik--;
+                if (min > 0)
+                    min--;
+
+            }
+            //else
+
+            //    NavigationService.GoBack();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            timer1.Interval = new TimeSpan(0, 0, 0, 1);
+            timer1.Tick += new EventHandler(timer1_Tick);
+            timer1.Start();
         }
     }
 }
