@@ -80,5 +80,11 @@ namespace AUHTC.View
             App.MapModel.ReadFile = null;
             Parent.Show();
         }
+
+        private void Sponsor_Ended(object sender, RoutedEventArgs e)
+        {
+            ((MediaElement)sender).Position = new TimeSpan(0, 0, 0, 0, 1);
+            ((MediaElement)sender).Play();
+        }
     }
 }
