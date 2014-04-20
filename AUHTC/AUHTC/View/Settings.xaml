@@ -1,40 +1,69 @@
 ﻿<Window x:Class="AUHTC.View.Settings"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Settings" Height="150" Width="230"
+        Title="Settings" Height="211" Width="565"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False" BorderThickness="0" AllowsTransparency="True" WindowStyle="None" SnapsToDevicePixels="True">
     <Grid Background="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="40*"/>
+        </Grid.ColumnDefinitions>
         <Label
-            x:Name="PortNamesLabel"
+            Name="PortNamesLabel"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Margin="10,10,0,0">
+            Margin="5,10,0,0" Height="26" Width="89" Grid.Column="1">
             Kullanılan Port:
         </Label>
         <ComboBox
-            x:Name="PortNamesCombobox"
-            HorizontalAlignment="Left"
+            Name="PortNamesCombobox"
+            HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Width="120"
-            Margin="100,10,0,0"
+            Margin="0,10,10,0"
             Loaded="PortNamesCombobox_Loaded"
-            ItemsSource="{Binding Path=PortNames, Source={x:Static Application.Current}}"/>
+            ItemsSource="{Binding Path=PortNames, Source={x:Static Application.Current}}" Height="22" Grid.Column="1"/>
         <Label
-            x:Name="BaudRateLabel"
+            Name="BaudRateLabel"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Margin="10,45,0,0">
+            Margin="5,40,0,0" Height="26" Width="66" Grid.Column="1">
             Baud Rate:
         </Label>
         <ComboBox
-            x:Name="BaudRatesCombobox"
-            HorizontalAlignment="Left"
+            Name="BaudRatesCombobox"
+            HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            Width="120"
-            Margin="100,45,0,0"
+            Margin="0,40,10,0"
+            Width="120px"
             Loaded="BaudRateCombobox_Loaded"
-            ItemsSource="{Binding Path=BaudRates, Source={x:Static Application.Current}}"/>
-        <Button x:Name="OkeyButton" Content="Tamam" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" Height="25px" Width="100px" Click="OkeyButton_Click"></Button>
-        <Button x:Name="CancelButton" Content="İptal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Height="25px" Width="100px" Click="CancelButton_Click"></Button>
+            ItemsSource="{Binding Path=BaudRates, Source={x:Static Application.Current}}" Height="22" Grid.Column="1"/>
+        <Button Content="Tamam" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,120,10" Height="25px" Width="100px" Click="OkeyButton_Click" Grid.Column="1"/>
+        <Button Content="İptal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Height="25px" Width="100px" Click="CancelButton_Click" Grid.Column="1"/>
+        <GroupBox Header="Map Ayarları" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Height="205" Width="330">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="175"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Harita Adı" VerticalAlignment="Top" Margin="0,0,0,0"/>
+                    <TextBox Name="mapnameTextBox" HorizontalAlignment="Center" Height="23" Margin="0,20,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextAlignment="Center"/>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Offset 1: (X, Y)" VerticalAlignment="Top" Margin="0,50,0,0"/>
+                    <TextBox Name="offsetTextbox1" HorizontalAlignment="Center" Height="23" Margin="0,70,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextAlignment="Center"/>
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Offset 2: (X, Y)" VerticalAlignment="Top" Margin="0,100,0,0"/>
+                    <TextBox Name="offsetTextbox2" HorizontalAlignment="Center" Height="23" Margin="0,120,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextAlignment="Center"/>
+                    <Image Name="MapImage" HorizontalAlignment="Right" VerticalAlignment="Bottom" Stretch="Uniform" Source="../MediaFiles/map.png" Width="175" Height="125" Grid.Column="1" />
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Null" VerticalAlignment="Top" Margin="0,0,0,0" Grid.Column="1"/>
+                </Grid>
+                <Button Content="Yeni" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,210,0" Height="25px" Width="100px" Click="NewMap_Click" Grid.Row="1"/>
+                <Button Content="Düzenle" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0" Height="25px" Width="100px" Click="EditMap_Click" Grid.Row="1"/>
+                <Button Content="Sil" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="210,10,0,0" Height="25px" Width="100px" Click="DeleteMap_Click" Grid.Row="1"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>
