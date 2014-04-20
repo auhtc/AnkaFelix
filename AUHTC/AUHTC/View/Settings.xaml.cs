@@ -71,6 +71,8 @@ namespace AUHTC.View
             //ayaryaz.WriteLine("OffSet1=" + offsetTextbox1.Text); //İçinde sayi,sayi şeklinde veri olmalı regex koysak mı?
             //ayaryaz.WriteLine("OffSet2=" + offsetTextbox2.Text); //İçinde sayi,sayi şeklinde veri olmalı regex koysak mı?
             //ayaryaz.Close();
+
+            // Race içindeki string format = "mm:ss.fff"; satırı kısmına oku yaz yapılcak. Boşluk yasak . : / kullanılabilir.
         }
 
         private void OkeyButton_Click(object sender, RoutedEventArgs e)

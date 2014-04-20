@@ -138,6 +138,17 @@
     <Resource Include="MediaFiles\Background.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="MediaFiles\Batarya\0.png" />
+    <Resource Include="MediaFiles\Batarya\10.png" />
+    <Resource Include="MediaFiles\Batarya\100.png" />
+    <Resource Include="MediaFiles\Batarya\20.png" />
+    <Resource Include="MediaFiles\Batarya\30.png" />
+    <Resource Include="MediaFiles\Batarya\40.png" />
+    <Resource Include="MediaFiles\Batarya\50.png" />
+    <Resource Include="MediaFiles\Batarya\60.png" />
+    <Resource Include="MediaFiles\Batarya\70.png" />
+    <Resource Include="MediaFiles\Batarya\80.png" />
+    <Resource Include="MediaFiles\Batarya\90.png" />
     <Content Include="MediaFiles\sponsor.gif" />
   </ItemGroup>
   <ItemGroup>

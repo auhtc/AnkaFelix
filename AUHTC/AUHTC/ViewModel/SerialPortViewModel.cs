@@ -110,7 +110,9 @@ namespace AUHTC.ViewModel
                             data.RecordDate = DateTime.Now;
                             data.Type = "Standart Data";
                             SaveDataToDb(data);
+                            // Hiz OrtalamaHiz Sicaklik Batarya1 Batarya2 Time değişkenleri Bind için hazır.
                             // Data hiç değişmemiş bind eder mi?
+                            // HesapOrtalamaHiz HesapKalanSure HesapHarcananEnerji HesapTahminiEnerji HesapBitirmeOrtalamaHiz değerleri bind için hazır hesaplanacaklar.
                         }
                         else if (rgx_GPSData.IsMatch(recievedData))
                         {

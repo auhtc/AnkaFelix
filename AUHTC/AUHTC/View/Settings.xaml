@@ -9,10 +9,9 @@
             <ColumnDefinition Width="40*"/>
         </Grid.ColumnDefinitions>
         <Label
-            Name="PortNamesLabel"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Margin="5,10,0,0" Height="26" Width="89" Grid.Column="1">
+            Margin="5,10,0,0" Height="25" Width="90" Grid.Column="1">
             Kullanılan Port:
         </Label>
         <ComboBox
@@ -24,11 +23,10 @@
             Loaded="PortNamesCombobox_Loaded"
             ItemsSource="{Binding Path=PortNames, Source={x:Static Application.Current}}" Height="22" Grid.Column="1"/>
         <Label
-            Name="BaudRateLabel"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Margin="5,40,0,0" Height="26" Width="66" Grid.Column="1">
-            Baud Rate:
+            Margin="5,40,0,0" Height="25" Width="90" Grid.Column="1">
+            Baud Oranı:
         </Label>
         <ComboBox
             Name="BaudRatesCombobox"
@@ -38,6 +36,12 @@
             Width="120px"
             Loaded="BaudRateCombobox_Loaded"
             ItemsSource="{Binding Path=BaudRates, Source={x:Static Application.Current}}" Height="22" Grid.Column="1"/>
+        <Label
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="5,70,0,0" Height="25" Width="90" Grid.Column="1">
+            Sayaç Formatı:
+        </Label>
         <Button Content="Tamam" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,120,10" Height="25px" Width="100px" Click="OkeyButton_Click" Grid.Column="1"/>
         <Button Content="İptal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Height="25px" Width="100px" Click="CancelButton_Click" Grid.Column="1"/>
         <GroupBox Header="Map Ayarları" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Height="205" Width="330">
@@ -65,5 +69,6 @@
                 <Button Content="Sil" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="210,10,0,0" Height="25px" Width="100px" Click="DeleteMap_Click" Grid.Row="1"/>
             </Grid>
         </GroupBox>
+        <TextBox Name="countTextBox" HorizontalAlignment="Right" Height="20" Margin="0,72,10,0" TextWrapping="Wrap" Text="mm:ss.fff" VerticalAlignment="Top" Width="120" TextAlignment="Center" Grid.Column="1"/>
     </Grid>
 </Window>

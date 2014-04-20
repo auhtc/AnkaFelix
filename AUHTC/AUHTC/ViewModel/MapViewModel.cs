@@ -3,11 +3,13 @@ using System.Windows;
 using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Media;
 
 namespace AUHTC.ViewModel
 {
     public class MapViewModel : INotifyPropertyChanged
     {
+        int sayi = 0;
         private Point Offset1 { get; set; }
         private Point Offset2 { get; set; }
         private double RatioX { get; set; }
@@ -33,6 +35,34 @@ namespace AUHTC.ViewModel
             }
         }
 
+        private ImageSource bataryaimage1;
+        public ImageSource BataryaImage1 //Bind için hazır
+        {
+            get { return bataryaimage1; }
+            set
+            {
+                if (value != bataryaimage1)
+                {
+                    bataryaimage1 = value;
+                    NotifyPropertyChanged("BataryaImage1");
+                }
+            }
+        }
+
+        private ImageSource bataryaimage2;
+        public ImageSource BataryaImage2 //Bind için hazır
+        {
+            get { return bataryaimage2; }
+            set
+            {
+                if (value != bataryaimage2)
+                {
+                    bataryaimage2 = value;
+                    NotifyPropertyChanged("BataryaImage2");
+                }
+            }
+        }
+
         protected void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
@@ -40,10 +70,18 @@ namespace AUHTC.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        private void Marker(int x,int y)
+        private void Marker(string koor1,string koor2)
         {
             //TODO MapImage.top ve MapImage.left ihtiyaç! Kayma oluyor markerda
-            Koor = new Thickness(y, x, 0, 0);
+            int KoorX = (int)(((int.Parse(koor1.Substring(0, 2)) * 100000) + (int)((float.Parse((koor1.Replace(".", ",")).Substring(2, koor1.Length - 3)) / 60) * 100000) - Offset1.X) * RatioX);
+            int KoorY = (int)(((int.Parse(koor2.Substring(0, 3)) * 100000) + (int)((float.Parse((koor2.Replace(".", ",")).Substring(3, koor2.Length - 4)) / 60) * 100000) - Offset1.Y) * RatioY);
+            Koor = new Thickness(KoorY, KoorX, 0, 0);
+        }
+
+        private void BataryaPercent(int bat1, int bat2)
+        {
+            BataryaImage1 = new ImageSourceConverter().ConvertFromString("../../MediaFiles/Batarya/" + ((bat1 - 1) - ((bat1 - 1) % 10)) + ".png") as ImageSource;
+            BataryaImage2 = new ImageSourceConverter().ConvertFromString("../../MediaFiles/Batarya/" + ((bat2 - 1) - ((bat2 - 1) % 10)) + ".png") as ImageSource;
         }
 
         public bool ReadData()
@@ -62,9 +100,11 @@ namespace AUHTC.ViewModel
                 if (regex.IsMatch(text))
                 {
                     string[] words = text.Split(',');
-                    int KoorX = (int.Parse(words[3].Substring(0, 2)) * 100000) + (int)((float.Parse((words[3].Replace(".", ",")).Substring(2, words[3].Length - 3)) / 60) * 100000);
-                    int KoorY = (int.Parse(words[5].Substring(0, 3)) * 100000) + (int)((float.Parse((words[5].Replace(".", ",")).Substring(3, words[5].Length - 4)) / 60) * 100000);
-                    Marker((int)((KoorX - Offset1.X) * RatioX), (int)((KoorY - Offset1.Y) * RatioY));
+                    Marker(words[3],words[5]); // Okul mapi için koordinat verisinden sadece 4. ve 6. yı kullanıyorum
+                    // Hollanda da meridyen farkı bilmem ne fark gösterme şansı var..
+                    BataryaPercent(sayi++,100-sayi); // Örnek Kullanım
+                    if (sayi == 100)
+                        sayi = 0;
                 }
                 return true;
         }
