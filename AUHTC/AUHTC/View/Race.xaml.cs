@@ -95,17 +95,32 @@ namespace AUHTC.View
             ComboBox cmb = (ComboBox)sender;
             switch (cmb.Margin.Top.ToString())
             {
-                case "10":
+                case "10": // Değişkenler OTO Pilot
                     cmb.SelectedItem = App.DefaultDegisken;
                     break;
-                case "40":
+                case "40": // Operatörler OTO Pilot
                     cmb.SelectedItem = App.DefaultOperator;
                     break;
-                case "70":
+                case "70": // Değerler OTO Pilot
                     cmb.SelectedItem = App.DefaultDeger;
                     break;
-                case "100":
+                case "100": // İşlemler OTO Pilot
                     cmb.SelectedItem = App.DefaultIslem;
+                    break;
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            switch (btn.Margin.Right.ToString())
+            {
+                case "10":
+                    // Sil Eventi
+                    break;
+                case "100":
+                    // Ekle Eventi
+                    App.MapModel.AddRule(DegiskenCombo,OperatorCombo,DegerCombo,IslemCombo);
                     break;
             }
         }

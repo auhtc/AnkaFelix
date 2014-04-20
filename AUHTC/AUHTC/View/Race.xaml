@@ -58,10 +58,13 @@
         </GroupBox>
         <GroupBox Header="Otomatik Pilot" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1">
             <Grid>
-                <ComboBox HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="0,10,10,0" ItemsSource="{Binding Path=Degiskenler, Source={x:Static Application.Current}}" Height="22" Grid.Column="1" Loaded="ComboBox_Loaded"/>
-                <ComboBox HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="0,40,10,0" ItemsSource="{Binding Path=Operatorler, Source={x:Static Application.Current}}" Height="22" Grid.Column="1" Loaded="ComboBox_Loaded"/>
-                <ComboBox HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="0,70,10,0" ItemsSource="{Binding Path=Degerler, Source={x:Static Application.Current}}" Height="22" Grid.Column="1" Loaded="ComboBox_Loaded"/>
-                <ComboBox HorizontalAlignment="Right" VerticalAlignment="Top" Width="220" Margin="0,100,10,0" ItemsSource="{Binding Path=Islemler, Source={x:Static Application.Current}}" Height="22" Grid.Column="1" Loaded="ComboBox_Loaded"/>
+                <ComboBox Name="DegiskenCombo" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="0,10,10,0" ItemsSource="{Binding Path=Degiskenler, Source={x:Static Application.Current}}" Height="22" Grid.Column="1" Loaded="ComboBox_Loaded"/>
+                <ComboBox Name="OperatorCombo" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="0,40,10,0" ItemsSource="{Binding Path=Operatorler, Source={x:Static Application.Current}}" Height="22" Grid.Column="1" Loaded="ComboBox_Loaded"/>
+                <ComboBox Name="DegerCombo" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="0,70,10,0" ItemsSource="{Binding Path=Degerler, Source={x:Static Application.Current}}" Height="22" Grid.Column="1" Loaded="ComboBox_Loaded"/>
+                <ComboBox Name="IslemCombo" HorizontalAlignment="Right" VerticalAlignment="Top" Width="230" Margin="0,100,10,0" ItemsSource="{Binding Path=Islemler, Source={x:Static Application.Current}}" Height="22" Grid.Column="1" Loaded="ComboBox_Loaded"/>
+                <ListBox HorizontalAlignment="Right" Height="270" Margin="0,160,10,0" VerticalAlignment="Top" Width="230" ItemsSource="{Binding Path=Rules, Source={x:Static Application.Current}}"/>
+                <Button Content="Sil" HorizontalAlignment="Right" Margin="0,130,10,0" VerticalAlignment="Top" Width="80" Height="23" Click="Button_Click"/>
+                <Button Content="Ekle" HorizontalAlignment="Right" Margin="0,130,100,0" VerticalAlignment="Top" Width="80" Height="23" Click="Button_Click"/>
             </Grid>
         </GroupBox>
         <TextBlock Grid.Column="1" Name="CountdownTextBlock" Text="00:00.000" Foreground="Green" FontFamily="DigifaceWide" FontSize="90" HorizontalAlignment="Center" VerticalAlignment="Center"/>

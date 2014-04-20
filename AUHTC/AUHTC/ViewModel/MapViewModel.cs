@@ -4,11 +4,58 @@ using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
+using System.Windows.Controls;
+using System.Collections.Generic;
 
 namespace AUHTC.ViewModel
 {
     public class MapViewModel : INotifyPropertyChanged
     {
+        public MapViewModel()
+        {
+            OtoPilot = new OtoPilotClass();
+        }
+
+        public class OtoPilotClass
+        {
+            public class RulesClass
+            {
+                public RulesClass(string d, string o, string dd, string i)
+                {
+                    Degisken = d;
+                    Operator = o;
+                    Deger = dd;
+                    Islem = i;
+                }
+
+                public string Degisken { get; set; }
+                public string Operator { get; set; }
+                public string Deger { get; set; }
+                public string Islem { get; set; }
+            }
+
+            public static List<RulesClass> Rules;
+            public OtoPilotClass() { Rules = new List<RulesClass>(); }
+            public void AddRule(string d, string o, string dd, string i)
+            {
+                Rules.Add(new RulesClass(d, o, dd, i));
+            }
+            public void DeleteRule(int index) { Rules.RemoveAt(index); }
+            public void SetTodo(string islem) { foreach (RulesClass item in Rules) item.Islem = islem; }
+            public void DeleteAll() { Rules.Clear(); }
+
+            public bool isWarning(bool dosth)
+            {
+                foreach (RulesClass item in Rules)
+                {
+                    //TODO OtoPilot Kontrol Sistemi Yazılacak
+                }
+                return false;
+            }
+        }
+
+        OtoPilotClass OtoPilot;
+
         int sayi = 0;
         private Point Offset1 { get; set; }
         private Point Offset2 { get; set; }
@@ -107,6 +154,12 @@ namespace AUHTC.ViewModel
                         sayi = 0;
                 }
                 return true;
+        }
+
+        internal void AddRule(ComboBox DegiskenCombo, ComboBox OperatorCombo, ComboBox DegerCombo, ComboBox IslemCombo)
+        {
+            OtoPilot.AddRule("", "", "", "");
+            NotifyPropertyChanged("OtoPilot.Rules");
         }
     }
 }
