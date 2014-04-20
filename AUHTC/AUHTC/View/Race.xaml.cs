@@ -25,13 +25,14 @@ namespace AUHTC.View
     public partial class Race : Window
     {
         Thread thread;
-        AnkaFelix Parent;
+        AnkaFelix ParentAnka;
         public Race(AnkaFelix parent)
         {
             InitializeComponent();
             this.DataContext = App.MapModel;
-            Parent = parent;
+            ParentAnka = parent;
         }
+
         DispatcherTimer timer1 = new DispatcherTimer();
         DateTime end;
         string format = "mm:ss.fff";
@@ -78,13 +79,35 @@ namespace AUHTC.View
                 thread.Abort();
             timer1.Stop();
             App.MapModel.ReadFile = null;
-            Parent.Show();
+            ParentAnka.Show();
         }
 
-        private void Sponsor_Ended(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ((MediaElement)sender).Position = new TimeSpan(0, 0, 0, 0, 1);
-            ((MediaElement)sender).Play();
+            //StreamReader sponsoroku = new StreamReader("../../MediaFiles/Sponsor/Sponsor.html");
+            //string htmlicerik = sponsoroku.ReadToEnd().Replace("pathtoimage", "file://" + System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../../MediaFiles/Sponsor");
+            //SponsorWebBrowser.NavigateToString(htmlicerik);
+            //sponsoroku.Close();
+        }
+
+        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+            switch (cmb.Margin.Top.ToString())
+            {
+                case "10":
+                    cmb.SelectedItem = App.DefaultDegisken;
+                    break;
+                case "40":
+                    cmb.SelectedItem = App.DefaultOperator;
+                    break;
+                case "70":
+                    cmb.SelectedItem = App.DefaultDeger;
+                    break;
+                case "100":
+                    cmb.SelectedItem = App.DefaultIslem;
+                    break;
+            }
         }
     }
 }

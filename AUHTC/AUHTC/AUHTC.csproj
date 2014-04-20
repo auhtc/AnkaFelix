@@ -138,6 +138,13 @@
     <Resource Include="MediaFiles\Background.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="MediaFiles\Sponsor\aka.jpg" />
+    <Resource Include="MediaFiles\Sponsor\matrisled.jpg" />
+    <Resource Include="MediaFiles\Sponsor\microsoft.jpg" />
+    <Resource Include="MediaFiles\Sponsor\panelsan.jpg" />
+    <Content Include="MediaFiles\Sponsor\sponsor.html" />
+    <Resource Include="MediaFiles\Sponsor\Textreme.jpg" />
+    <Resource Include="MediaFiles\Sponsor\uzumcu.jpg" />
     <Resource Include="MediaFiles\Batarya\0.png" />
     <Resource Include="MediaFiles\Batarya\10.png" />
     <Resource Include="MediaFiles\Batarya\100.png" />

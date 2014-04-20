@@ -18,11 +18,11 @@ namespace AUHTC.View
 {
     public partial class Settings : Window
     {
-        AnkaFelix Parent;
+        AnkaFelix ParentAnka;
         public Settings(AnkaFelix parent)
         {
             InitializeComponent();
-            Parent = parent;
+            ParentAnka = parent;
 
             AyarOku();
         }
@@ -79,14 +79,13 @@ namespace AUHTC.View
         {
             SaveSettings();
             this.Close();
-            Parent.IsEnabled = true;
-
+            ParentAnka.IsEnabled = true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-            Parent.IsEnabled = true;
+            ParentAnka.IsEnabled = true;
         }
 
         private void DeleteMap_Click(object sender, RoutedEventArgs e)

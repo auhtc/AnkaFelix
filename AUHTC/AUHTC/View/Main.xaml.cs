@@ -21,10 +21,12 @@ namespace AUHTC.View
     /// </summary>
     public partial class Main : INotifyPropertyChanged
     {
+        AnkaFelix ParentAnka;
         public Main(AnkaFelix parent)
         {
             InitializeComponent();
             this.DataContext = this;
+            ParentAnka = parent;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

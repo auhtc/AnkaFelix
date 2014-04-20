@@ -48,13 +48,73 @@ namespace AUHTC
             get { return defaultBaudRate; }
         }
 
+
+        // Otomatik Pilot
+        private static List<string> degiskenler;
+        public static List<string> Degiskenler
+        {
+            get { return degiskenler; }
+        }
+
+        private static string defaultDegisken;
+        public static string DefaultDegisken
+        {
+            get { return defaultDegisken; }
+        }
+
+        private static List<string> operatorler;
+        public static List<string> Operatorler
+        {
+            get { return operatorler; }
+        }
+
+        private static string defaultOperator;
+        public static string DefaultOperator
+        {
+            get { return defaultOperator; }
+        }
+
+        private static List<int> degerler;
+        public static List<int> Degerler
+        {
+            get { return degerler; }
+        }
+
+        private static int defaultDeger;
+        public static int DefaultDeger
+        {
+            get { return defaultDeger; }
+        }
+
+        private static List<string> islemler;
+        public static List<string> Islemler
+        {
+            get { return islemler; }
+        }
+
+        private static string defaultIslem;
+        public static string DefaultIslem
+        {
+            get { return defaultIslem; }
+        }
+
         public App()
         {
             portNames = AUHTC.Properties.Settings.Default.PortNames.Split(';').ToList();
             baudRates = AUHTC.Properties.Settings.Default.BaudRates.Split(';').ToList().Select(b => Int32.Parse(b)).ToList();
-
+            
             defaultPortName = AUHTC.Properties.Settings.Default.DefaultPortName;
             defaultBaudRate = AUHTC.Properties.Settings.Default.DefaultBaudRate;
+
+            // Otomatik Pilot Combo
+            degiskenler = AUHTC.Properties.Settings.Default.Degiskenler.Split(';').ToList();
+            defaultDegisken = AUHTC.Properties.Settings.Default.DefaultDegisken;
+            operatorler = AUHTC.Properties.Settings.Default.Operatorler.Split(';').ToList();
+            defaultOperator = AUHTC.Properties.Settings.Default.DefaultOperator;
+            degerler = AUHTC.Properties.Settings.Default.Degerler.Split(';').ToList().Select(b => Int32.Parse(b)).ToList();
+            defaultDeger = AUHTC.Properties.Settings.Default.DefaultDeger;
+            islemler = AUHTC.Properties.Settings.Default.Islemler.Split(';').ToList();
+            defaultIslem = AUHTC.Properties.Settings.Default.DefaultIslem;
 
             viewModel = new SerialPortViewModel();
             mapModel = new MapViewModel();
