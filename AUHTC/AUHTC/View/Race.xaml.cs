@@ -31,7 +31,7 @@ namespace AUHTC.View
         public Race(/*AnkaFelix parent*/)
         {
             InitializeComponent();
-            this.DataContext = App.MapModel;
+            this.DataContext = App.ViewModel;
             //ParentAnka = parent;
         }
 
@@ -52,7 +52,7 @@ namespace AUHTC.View
         {
             RaceStatus = false;
             thread.Abort();
-            App.MapModel.ReadFile = null;
+            //App.ViewModel.ReadFile = null;
             RaceStart.Visibility = Visibility.Visible;
             RaceStop.Visibility = Visibility.Hidden;
         }
@@ -61,12 +61,12 @@ namespace AUHTC.View
         {
             end = DateTime.Now.AddMinutes(39);
             RaceStatus = true;
-            App.MapModel.ReadFile = File.OpenText("../../MediaFiles/c.txt");
+            //App.ViewModel.ReadFile = File.OpenText("../../MediaFiles/c.txt");
             thread = new Thread(new ThreadStart(delegate
             {
                 while (true)
                 {
-                    if (!App.MapModel.ReadData())
+                    if (!App.ViewModel.ReadData())
                         thread.Abort();
                     Thread.Sleep(100);
                 }
@@ -81,7 +81,7 @@ namespace AUHTC.View
             if (thread != null)
                 thread.Abort();
             timer1.Stop();
-            App.MapModel.ReadFile = null;
+            //App.ViewModel.ReadFile = null;
             ParentAnka.Show();
         }
 
@@ -126,7 +126,7 @@ namespace AUHTC.View
                     break;
                 case "100":
                     // Ekle Eventi
-                    App.MapModel.AddRule(DegiskenCombo, OperatorCombo, DegerCombo, IslemCombo);
+                    //App.MapModel.AddRule(DegiskenCombo, OperatorCombo, DegerCombo, IslemCombo);
                     break;
             }
         }

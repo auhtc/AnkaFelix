@@ -118,6 +118,7 @@ namespace AUHTC.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
         private void Marker(string koor1,string koor2)
         {
             //TODO MapImage.top ve MapImage.left ihtiyaç! Kayma oluyor markerda

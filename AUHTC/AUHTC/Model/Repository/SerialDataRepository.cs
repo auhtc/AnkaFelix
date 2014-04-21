@@ -10,5 +10,7 @@ namespace AUHTC.Model.Repository
     public class SerialDataRepository : DbContext
     {
         public DbSet<ProcessedDataModel> SerialData { get; set; }
+
+        public DbSet<SettingsModel> ProgramSettings { get; set; }
     }
 }

@@ -43,9 +43,14 @@ namespace AUHTC.ViewModel
             return dataList;
         }
 
-        internal List<ProcessedDataModel> GetAll()
+        internal List<ProcessedDataModel> GetAllSerialData()
         {
             return entity.SerialData.ToList();
+        }
+
+        internal string GetSettings()
+        {
+            return entity.ProgramSettings.ToString();
         }
     }
 }

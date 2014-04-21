@@ -18,11 +18,11 @@ namespace AUHTC
             get { return viewModel; }
         }
 
-        private static MapViewModel mapModel;
-        public static MapViewModel MapModel
-        {
-            get { return mapModel; }
-        }
+        //private static MapViewModel mapModel;
+        //public static MapViewModel MapModel
+        //{
+        //    get { return mapModel; }
+        //}
 
         private static List<string> portNames;
         public static List<string> PortNames
@@ -124,7 +124,7 @@ namespace AUHTC
             defaultIslem = AUHTC.Properties.Settings.Default.DefaultIslem;
 
             viewModel = new SerialPortViewModel();
-            mapModel = new MapViewModel();
+            //mapModel = new MapViewModel();
             allConstants = new Constants();
         }
     }
