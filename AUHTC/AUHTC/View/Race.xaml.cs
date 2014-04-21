@@ -26,11 +26,13 @@ namespace AUHTC.View
     {
         Thread thread;
         AnkaFelix ParentAnka;
-        public Race(AnkaFelix parent)
+        public double sayi = 1366;
+        bool RaceStatus = false;
+        public Race(/*AnkaFelix parent*/)
         {
             InitializeComponent();
             this.DataContext = App.MapModel;
-            ParentAnka = parent;
+            //ParentAnka = parent;
         }
 
         DispatcherTimer timer1 = new DispatcherTimer();
@@ -39,13 +41,17 @@ namespace AUHTC.View
 
         void timer1_Tick(Object sender, EventArgs e)
         {
-            CountdownTextBlock.Text = string.Format("{0:" + format.Replace(":", "\\:").Replace(".", "\\.") + "}", end - DateTime.Now);
+            if (sayi == -800)
+                sayi = 1366;
+            if (RaceStatus == true)
+                CountdownTextBlock.Text = string.Format("{0:" + format.Replace(":", "\\:").Replace(".", "\\.") + "}", end - DateTime.Now);
+            SponsorImage.Margin = new Thickness(sayi--, SponsorImage.Margin.Top, SponsorImage.Margin.Right, SponsorImage.Margin.Bottom);
         }
 
         private void RaceStop_Click(object sender, RoutedEventArgs e)
         {
+            RaceStatus = false;
             thread.Abort();
-            timer1.Stop();
             App.MapModel.ReadFile = null;
             RaceStart.Visibility = Visibility.Visible;
             RaceStop.Visibility = Visibility.Hidden;
@@ -54,10 +60,7 @@ namespace AUHTC.View
         private void RaceStart_Click(object sender, RoutedEventArgs e)
         {
             end = DateTime.Now.AddMinutes(39);
-            timer1.Interval = new TimeSpan(0, 0, 0, 0, 10);
-            timer1.Tick += new EventHandler(timer1_Tick);
-            timer1.Start();
-
+            RaceStatus = true;
             App.MapModel.ReadFile = File.OpenText("../../MediaFiles/c.txt");
             thread = new Thread(new ThreadStart(delegate
             {
@@ -84,6 +87,9 @@ namespace AUHTC.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            timer1.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            timer1.Tick += new EventHandler(timer1_Tick);
+            timer1.Start();
             //StreamReader sponsoroku = new StreamReader("../../MediaFiles/Sponsor/Sponsor.html");
             //string htmlicerik = sponsoroku.ReadToEnd().Replace("pathtoimage", "file://" + System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../../MediaFiles/Sponsor");
             //SponsorWebBrowser.NavigateToString(htmlicerik);
@@ -120,7 +126,7 @@ namespace AUHTC.View
                     break;
                 case "100":
                     // Ekle Eventi
-                    App.MapModel.AddRule(DegiskenCombo,OperatorCombo,DegerCombo,IslemCombo);
+                    App.MapModel.AddRule(DegiskenCombo, OperatorCombo, DegerCombo, IslemCombo);
                     break;
             }
         }

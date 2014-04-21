@@ -98,6 +98,13 @@ namespace AUHTC
             get { return defaultIslem; }
         }
 
+
+        private static Constants allConstants;
+        public static Constants AllConstants
+        {
+            get { return allConstants; }
+        }
+
         public App()
         {
             portNames = AUHTC.Properties.Settings.Default.PortNames.Split(';').ToList();
@@ -118,6 +125,7 @@ namespace AUHTC
 
             viewModel = new SerialPortViewModel();
             mapModel = new MapViewModel();
+            allConstants = new Constants();
         }
     }
 }
