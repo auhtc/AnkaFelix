@@ -18,17 +18,17 @@ namespace AUHTC.ViewModel
             entity.Database.CreateIfNotExists();
         }
 
-        internal void AddDataToDB(ProcessedDataModel data)
+        internal void AddSerialDataToDB(ProcessedDataModel data)
         {
             entity.SerialData.Add(data);
         }
 
-        internal void RemoveDataFromDB(ProcessedDataModel data)
+        internal void RemoveSerialDataFromDB(ProcessedDataModel data)
         {
             entity.SerialData.Remove(data);
         }
 
-        internal List<ProcessedDataModel> GetDataListByDate(DateTime date)
+        internal List<ProcessedDataModel> GetSerialDataListByDate(DateTime date)
         {
             List<ProcessedDataModel> dataList = new List<ProcessedDataModel>();
             var query = from data in entity.SerialData
@@ -43,14 +43,43 @@ namespace AUHTC.ViewModel
             return dataList;
         }
 
+        internal List<ProcessedDataModel> GetSerialDataListByType(string dataType)
+        {
+            List<ProcessedDataModel> serialDataList = new List<ProcessedDataModel>();
+            var query = from data in entity.SerialData
+                        where data.Type == dataType
+                        select data;
+
+            foreach (var data in query)
+            {
+                serialDataList.Add(data);
+            }
+
+            return serialDataList;
+        }
+
         internal List<ProcessedDataModel> GetAllSerialData()
         {
             return entity.SerialData.ToList();
         }
 
-        internal string GetSettings()
+        internal void SaveSettingsToDB(SettingsModel settings)
         {
-            return entity.ProgramSettings.ToString();
+            entity.ProgramSettings.Add(settings);
+        }
+
+        internal void RemoveSettingsFromDB(SettingsModel settings)
+        {
+            entity.ProgramSettings.Remove(settings);
+        }
+
+        internal SettingsModel GetSettingsByMapName(string mapName)
+        {
+            var settings = new SettingsModel();/*(from data in entity.ProgramSettings
+                            where data.MapName == mapName
+                            select data).SingleOrDefault();*/
+
+            return settings;
         }
     }
 }

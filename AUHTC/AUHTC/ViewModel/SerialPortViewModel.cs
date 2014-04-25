@@ -17,28 +17,25 @@ namespace AUHTC.ViewModel
 {
     public class SerialPortViewModel : INotifyPropertyChanged
     {
-        public SerialPortViewModel()
-        {
-            database = new EntityViewModel();
-            string test = database.GetSettings();
-        }
+        #region Properties And Variables
 
-        Regex rgx_StandartData = new Regex(@"([A-Z]{9},[0-9][0-9][0-9])");
-        Regex rgx_GPSData = new Regex(@"(\$[A-Z]{1,},[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4})");
+        private SettingsModel settings;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private Regex rgx_StandartData;
+        private Regex rgx_GPSData;
 
         private SerialPort serialPort;
         private EntityViewModel database;
+
         private string recievedData;
 
-        int sayi = 0;
         private Point Offset1 { get; set; }
         private Point Offset2 { get; set; }
         private double RatioX { get; set; }
         private double RatioY { get; set; }
 
-        //public StreamReader ReadFile;
+        int sayi = 0;
+
         private Thickness koor;
         public Thickness Koor
         {
@@ -53,30 +50,30 @@ namespace AUHTC.ViewModel
             }
         }
 
-        private ImageSource bataryaimage1;
-        public ImageSource BataryaImage1 //Bind için hazır
+        private ImageSource bateryImage1;
+        public ImageSource BateryImage1
         {
-            get { return bataryaimage1; }
+            get { return bateryImage1; }
             set
             {
-                if (value != bataryaimage1)
+                if (value != bateryImage1)
                 {
-                    bataryaimage1 = value;
-                    NotifyPropertyChanged("BataryaImage1");
+                    bateryImage1 = value;
+                    NotifyPropertyChanged("BateryImage1");
                 }
             }
         }
 
-        private ImageSource bataryaimage2;
-        public ImageSource BataryaImage2 //Bind için hazır
+        private ImageSource bateryImage2;
+        public ImageSource BateryImage2
         {
-            get { return bataryaimage2; }
+            get { return bateryImage2; }
             set
             {
-                if (value != bataryaimage2)
+                if (value != bateryImage2)
                 {
-                    bataryaimage2 = value;
-                    NotifyPropertyChanged("BataryaImage2");
+                    bateryImage2 = value;
+                    NotifyPropertyChanged("BateryImage2");
                 }
             }
         }
@@ -97,10 +94,39 @@ namespace AUHTC.ViewModel
                 }
             }
         }
+        #endregion
+
+        #region ctor
+
+        public SerialPortViewModel()
+        {
+            database = new EntityViewModel();
+            serialPort = new SerialPort();
+            settings = database.GetSettingsByMapName(App.CurrentMapName);
+
+            rgx_StandartData = new Regex(@"([A-Z]{9},[0-9][0-9][0-9])");
+            rgx_GPSData = new Regex(@"(\$[A-Z]{1,},[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4})");
+
+            //Bu işlemlerin sadece bir kere yapılması yetiyor sanırım. Eğer her seferinde yapılması gerekiyorsa 190. satıra taşınacak!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Offset1 = new Point(settings.Offset1X, settings.Offset1Y);
+            Offset2 = new Point(settings.Offset2X, settings.Offset2Y);
+            //Offset1 = new Point(3978242, 3281838);
+            //Offset2 = new Point(3978033, 3282213);
+
+            Point Offset = new Point((Offset2.X - Offset1.X), (Offset2.Y - Offset1.Y));
+
+            RatioX = App.AllConstants.MapHeight / Offset.X;
+            RatioY = App.AllConstants.MapWidth / Offset.Y;
+            //RatioX = 507 / Offset.X;
+            //RatioY = 700 / Offset.Y;
+        }
+
+        #endregion
+
+        #region Methods
 
         public bool ReadDataFromPort(string portName, string baudRate)
         {
-            serialPort = new SerialPort();
             try
             {
                 serialPort.PortName = portName;
@@ -126,7 +152,7 @@ namespace AUHTC.ViewModel
                     message += "\n" + openPort + " bağlantı noktasını kullanmak ister misiniz?";
                     if (System.Windows.MessageBox.Show(message, "Uyarı!", System.Windows.MessageBoxButton.OKCancel) == System.Windows.MessageBoxResult.OK)
                     {
-                        Properties.Settings.Default.DefaultPortName = openPort;
+                        Properties.Settings.Default.DefaultPortName = openPort; //TODO -- çalışmıyor olabilir test edilecek
                         ReadDataFromPort(openPort, baudRate);
                     }
                 }
@@ -138,7 +164,7 @@ namespace AUHTC.ViewModel
         {
             try
             {
-                recievedData = serialPort.ReadLine().Trim('$');
+                recievedData = serialPort.ReadLine().Trim('$');  //trim işlemi alınan veriye göre değiştirilebilir test edilecek!
                 System.Windows.Application.Current.Dispatcher.Invoke(
                     DispatcherPriority.Normal, (Action)delegate()
                     {
@@ -157,16 +183,14 @@ namespace AUHTC.ViewModel
                         }
                         else if (rgx_GPSData.IsMatch(recievedData))
                         {
-                            //TODO recievedData App.MapModel.MapModel değişkenini dolduracak şekilde split edilecek
-
                             string[] words = recievedData.Split(',');
-                            Marker(words[3], words[5]); // Okul mapi için koordinat verisinden sadece 4. ve 6. yı kullanıyorum
+                            Marker(words[3], words[5]);// Okul mapi için koordinat verisinden sadece 4. ve 6. yı kullanıyorum
                             // Hollanda da meridyen farkı bilmem ne fark gösterme şansı var..
-                            BataryaPercent(sayi++, 100 - sayi); // Örnek Kullanım
-                            if (sayi == 100)
-                            {
-                                sayi = 0;
-                            }
+
+                            // Örnek Kullanım
+                            BateryPercent(sayi++, 100 - sayi);
+                            sayi %= 100;
+
                             data.RecordDate = DateTime.Now;
                             data.Type = "GPS Data";
                             SaveDataToDb(data);
@@ -187,21 +211,13 @@ namespace AUHTC.ViewModel
                     // TODO please wait gibi bişey eklenecek
                 }
                 RecieveData(sender, e);
-                //EndDataRead(); //TODO Araç bağlantısı koparsa bağlantıyı komple kapatıyor. ---YAPILDI TEST EDİLECEK
+                //TODO Araç bağlantısı koparsa bağlantıyı komple kapatıyor. ---YAPILDI TEST EDİLECEK
             }
         }
 
         private void SaveDataToDb(ProcessedDataModel data)
         {
-            database.AddDataToDB(data);
-        }
-
-        protected void NotifyPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            database.AddSerialDataToDB(data);
         }
 
         internal void EndDataRead()
@@ -217,39 +233,36 @@ namespace AUHTC.ViewModel
             Koor = new Thickness(KoorY, KoorX, 0, 0);
         }
 
-        private void BataryaPercent(int bat1, int bat2)
+        private void BateryPercent(int bat1, int bat2)
         {
-            BataryaImage1 = new ImageSourceConverter().ConvertFromString("../../MediaFiles/Batarya/" + ((bat1 - 1) - ((bat1 - 1) % 10)) + ".png") as ImageSource;
-            BataryaImage2 = new ImageSourceConverter().ConvertFromString("../../MediaFiles/Batarya/" + ((bat2 - 1) - ((bat2 - 1) % 10)) + ".png") as ImageSource;
+            BateryImage1 = new ImageSourceConverter().ConvertFromString("../../MediaFiles/Batarya/" + ((bat1 - 1) - ((bat1 - 1) % 10)) + ".png") as ImageSource;
+            BateryImage2 = new ImageSourceConverter().ConvertFromString("../../MediaFiles/Batarya/" + ((bat2 - 1) - ((bat2 - 1) % 10)) + ".png") as ImageSource;
         }
 
-        public bool ReadData()
+        internal bool ReadData()
         {
-            string text = "";//ReadFile.ReadLine();
+            throw new NotImplementedException();
+        }
 
-            Point Offset;
+        #endregion
 
-            Offset1 = new Point(3978242, 3281838); //TODO ayar dosyasından okunacak
-            Offset2 = new Point(3978033, 3282213); //TODO ayar dosyasından okunacak
+        #region Property Changed Event Processes
 
-            Offset = new Point((Offset2.X - Offset1.X), (Offset2.Y - Offset1.Y));
-            RatioX = 507 / Offset.X; //TODO 507 yerine MapImage.height şart
-            RatioY = 700 / Offset.Y; //TODO 700 yerine MapImage.width şart
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            if (text == null)
-                return false;
-
-            if (rgx_GPSData.IsMatch(text))
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
             {
-                string[] words = text.Split(',');
-                Marker(words[3], words[5]); // Okul mapi için koordinat verisinden sadece 4. ve 6. yı kullanıyorum
-                // Hollanda da meridyen farkı bilmem ne fark gösterme şansı var..
-                BataryaPercent(sayi++, 100 - sayi); // Örnek Kullanım
-                if (sayi == 100)
-                    sayi = 0;
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-            return true;
         }
 
+        #endregion
+
+        internal void SaveMapToDB(string mapName, string mapLocation, string offset1, string offset2)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

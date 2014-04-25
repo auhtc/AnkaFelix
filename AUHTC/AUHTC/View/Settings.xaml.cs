@@ -19,33 +19,13 @@ namespace AUHTC.View
     public partial class Settings : Window
     {
         AnkaFelix ParentAnka;
+
         public Settings(AnkaFelix parent)
         {
             InitializeComponent();
             ParentAnka = parent;
 
-            AyarOku();
-        }
-
-        private void AyarOku()
-        {
-            //StreamReader ayaroku;
-            //string yazi = "0";
-            //ayaroku = File.OpenText(dosya);
-            //do
-            //{
-            //    yazi = ayaroku.ReadLine();
-            //    if (yazi == null) { break; }
-            //    if (yazi.Substring(0, 6) == "MapLoc") { MapImage.Source = yazi.Substring(7, yazi.Length - 7); label1.Text = yazi.Substring(7, yazi.Length - 7); continue; }
-            //    if (yazi.Substring(0, 7) == "MapName") { mapnameTextBox.Text = yazi.Substring(8, yazi.Length - 8); continue; }
-            //    if (yazi.Substring(0, 7) == "OffSet1") { offsetTextbox1.Text = yazi.Substring(8, yazi.Length - 8); continue; }
-            //    if (yazi.Substring(0, 7) == "OffSet2") { offsetTextbox2.Text = yazi.Substring(8, yazi.Length - 8); continue; }
-            //} while (yazi != null);
-
-            //ayaroku.Close();
-
-
-            // Bu fonksiyon regex öğrenmeden önce yazdğım düz mantık :D
+            //TODO Veritabanından haritalar çekilip listboxa doldurulacak
         }
 
         private void PortNamesCombobox_Loaded(object sender, RoutedEventArgs e)
@@ -64,14 +44,6 @@ namespace AUHTC.View
             Properties.Settings.Default.DefaultBaudRate = Convert.ToInt32(BaudRatesCombobox.SelectedItem);
             Properties.Settings.Default.Save();
 
-            //StreamWriter ayaryaz;
-            //ayaryaz = File.CreateText(file);
-            //ayaryaz.WriteLine("MapLoc=" + MapImage.Source.ToString());
-            //ayaryaz.WriteLine("MapName=" + mapnameTextBox.Text);
-            //ayaryaz.WriteLine("OffSet1=" + offsetTextbox1.Text); //İçinde sayi,sayi şeklinde veri olmalı regex koysak mı?
-            //ayaryaz.WriteLine("OffSet2=" + offsetTextbox2.Text); //İçinde sayi,sayi şeklinde veri olmalı regex koysak mı?
-            //ayaryaz.Close();
-
             // Race içindeki string format = "mm:ss.fff"; satırı kısmına oku yaz yapılcak. Boşluk yasak . : / kullanılabilir.
         }
 
@@ -88,41 +60,77 @@ namespace AUHTC.View
             ParentAnka.IsEnabled = true;
         }
 
-        private void DeleteMap_Click(object sender, RoutedEventArgs e)
-        {
-            // Database den şuan açık map silinecek.
-            // NewMap_Click çalışacak
-        }
-
         private void EditMap_Click(object sender, RoutedEventArgs e)
         {
-            //mapnameTextBox.IsEnabled = true;
-            //offsetTextbox1.IsEnabled = true;
-            //offsetTextbox2.IsEnabled = true;
-
-            //OpenFileDialog resimac = new OpenFileDialog();
-            //resimac.Title = "Lütfen ayar dosyasını nereye kaydedeceğinizi seçin.";
-            //resimac.Filter = "PNG Resim(*.png)|*.png|JPEG Resim(*.jpg)|*.jpg";
-            //resimac.FilterIndex = 2;
-            //resimac.ShowDialog();
-            //if (resimac.FileName.ToString() != "")
-            //{
-            //    MapImage.Source.SetValue(resimac.FileName);
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Bir dosya seçmediniz.");
-            //}
+            NewAndEdit.IsEnabled = false;
+            EditControls.IsEnabled = true;
         }
 
         private void NewMap_Click(object sender, RoutedEventArgs e)
         {
-            //MapImage.Source.SetValue((DependencyProperty)null, null);
-            //mapnameTextBox.Text = "";
-            //offsetTextbox1.Text = "";
-            //offsetTextbox2.Text = "";
-            //Yeni harita oluşturucaz.. Map için png seçici bir dialog açıcaz.
-            // EditMap_Click çalışacak
+            AddNewMap();
+        }
+
+        private void SaveMap_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(mapnameTextBox.Text))
+            {
+                MessageBox.Show("Harita Adı Girilmedi!");
+                mapnameTextBox.Focus();
+            }
+            else if (string.IsNullOrEmpty(offsetTextbox1.Text))//TODO regex yazılacak: else if(regex.IsMatch(offsetTextbox1.Text))
+            {
+                MessageBox.Show("İlk Offset Değeri Girilmedi!");
+                offsetTextbox1.Focus();
+            }
+            else if (string.IsNullOrEmpty(offsetTextbox2.Text))//TODO regex yazılacak: else if(regex.IsMatch(offsetTextbox2.Text))
+            {
+                MessageBox.Show("İkinci Offset Değeri Girilmedi!");
+                offsetTextbox2.Focus();
+            }
+            else
+            {
+                string sourceFile = MapImage.Source.ToString().Substring(8);
+                string destinationFile = "/MediaFiles/Maps/" + mapnameTextBox.Text;
+                File.Copy(sourceFile, destinationFile);  //Test edilecek
+
+                App.ViewModel.SaveMapToDB(mapnameTextBox.Text, destinationFile, offsetTextbox1.Text, offsetTextbox2.Text);
+                EditControls.IsEnabled = false;
+                NewAndEdit.IsEnabled = true;
+            }
+        }
+
+        private void MapImage_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (EditControls.IsEnabled)
+            {
+                AddNewMap();
+            }
+        }
+
+        private void MapList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //TODO seçilen haritanın değerleri Harita Ayarlarındaki ilgili yerlere doldurulacak
+        }
+
+        private void AddNewMap()
+        {
+            OpenFileDialog map = new OpenFileDialog();
+
+            map.Filter = "*(*.png)|*.png|Tüm dosyalar (*.*)|*.*";
+            map.Multiselect = false;
+            map.RestoreDirectory = true;
+            map.Title = "Harita Seçiniz";
+
+            if (map.ShowDialog() == true)
+            {
+                mapnameTextBox.Text = string.Empty;
+                offsetTextbox1.Text = string.Empty;
+                offsetTextbox2.Text = string.Empty;
+                NewAndEdit.IsEnabled = false;
+                EditControls.IsEnabled = true;
+                MapImage.Source = new BitmapImage(new Uri(map.FileName));
+            }
         }
     }
 }

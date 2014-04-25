@@ -12,17 +12,13 @@ namespace AUHTC
 {
     public partial class App : Application
     {
+        #region Properties And Variables
+
         private static SerialPortViewModel viewModel;
         public static SerialPortViewModel ViewModel
         {
             get { return viewModel; }
         }
-
-        //private static MapViewModel mapModel;
-        //public static MapViewModel MapModel
-        //{
-        //    get { return mapModel; }
-        //}
 
         private static List<string> portNames;
         public static List<string> PortNames
@@ -48,6 +44,17 @@ namespace AUHTC
             get { return defaultBaudRate; }
         }
 
+        private static Constants allConstants;
+        public static Constants AllConstants
+        {
+            get { return allConstants; }
+        }
+
+        private static string currentMapName;
+        public static string CurrentMapName
+        {
+            get { return currentMapName; }
+        }
 
         // Otomatik Pilot
         private static List<string> degiskenler;
@@ -98,12 +105,9 @@ namespace AUHTC
             get { return defaultIslem; }
         }
 
+        #endregion
 
-        private static Constants allConstants;
-        public static Constants AllConstants
-        {
-            get { return allConstants; }
-        }
+        #region ctor
 
         public App()
         {
@@ -112,6 +116,7 @@ namespace AUHTC
             
             defaultPortName = AUHTC.Properties.Settings.Default.DefaultPortName;
             defaultBaudRate = AUHTC.Properties.Settings.Default.DefaultBaudRate;
+            currentMapName = AUHTC.Properties.Settings.Default.MapName;
 
             // Otomatik Pilot Combo
             degiskenler = AUHTC.Properties.Settings.Default.Degiskenler.Split(';').ToList();
@@ -123,9 +128,10 @@ namespace AUHTC
             islemler = AUHTC.Properties.Settings.Default.Islemler.Split(';').ToList();
             defaultIslem = AUHTC.Properties.Settings.Default.DefaultIslem;
 
-            viewModel = new SerialPortViewModel();
-            //mapModel = new MapViewModel();
             allConstants = new Constants();
+            viewModel = new SerialPortViewModel();
         }
+
+        #endregion
     }
 }

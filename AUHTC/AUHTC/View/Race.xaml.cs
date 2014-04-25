@@ -28,11 +28,11 @@ namespace AUHTC.View
         AnkaFelix ParentAnka;
         public double sayi = 1366;
         bool RaceStatus = false;
-        public Race(/*AnkaFelix parent*/)
+        public Race(AnkaFelix parent)
         {
             InitializeComponent();
             this.DataContext = App.ViewModel;
-            //ParentAnka = parent;
+            ParentAnka = parent;
         }
 
         DispatcherTimer timer1 = new DispatcherTimer();

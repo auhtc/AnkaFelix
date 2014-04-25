@@ -139,10 +139,13 @@
     <Resource Include="MediaFiles\Background.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Yapılacaklar.txt" />
     <Resource Include="MediaFiles\Sponsor\aka.jpg" />
     <Resource Include="MediaFiles\Sponsor\matrisled.jpg" />
     <Resource Include="MediaFiles\Sponsor\microsoft.jpg" />
     <Resource Include="MediaFiles\Sponsor\panelsan.jpg" />
+    <Content Include="MediaFiles\icons\cancel.png" />
+    <Resource Include="MediaFiles\icons\ok.png" />
     <Content Include="MediaFiles\Sponsor\sponsor.html" />
     <Resource Include="MediaFiles\Sponsor\Textreme.jpg" />
     <Resource Include="MediaFiles\Sponsor\uzumcu.jpg" />
@@ -162,6 +165,9 @@
   <ItemGroup>
     <Resource Include="MediaFiles\b.txt" />
     <Resource Include="MediaFiles\c.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MediaFiles\Maps\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
