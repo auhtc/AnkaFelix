@@ -1,1 +1,0 @@
-﻿-> SerialPortViewModel'de Marker methodundaki TODO'ya bak. Sanırım settings'le halletmiştik MapImage değerlerini
