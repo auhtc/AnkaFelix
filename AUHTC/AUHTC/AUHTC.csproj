@@ -139,7 +139,6 @@
     <Resource Include="MediaFiles\Background.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Yapılacaklar.txt" />
     <Resource Include="MediaFiles\Sponsor\aka.jpg" />
     <Resource Include="MediaFiles\Sponsor\matrisled.jpg" />
     <Resource Include="MediaFiles\Sponsor\microsoft.jpg" />
