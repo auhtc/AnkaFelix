@@ -41,18 +41,21 @@ namespace AUHTC.View
 
         void timer1_Tick(Object sender, EventArgs e)
         {
-            if (sayi == -800)
-                sayi = 1366;
+
+            if (sayi == -1080)
+            {
+                sayi = this.Width + 360;
+            }
             if (RaceStatus == true)
                 CountdownTextBlock.Text = string.Format("{0:" + format.Replace(":", "\\:").Replace(".", "\\.") + "}", end - DateTime.Now);
-            SponsorImage.Margin = new Thickness(sayi--, SponsorImage.Margin.Top, SponsorImage.Margin.Right, SponsorImage.Margin.Bottom);
+            SponsorPanel.Margin = new Thickness(sayi--, SponsorPanel.Margin.Top, SponsorPanel.Margin.Right, SponsorPanel.Margin.Bottom);
         }
 
         private void RaceStop_Click(object sender, RoutedEventArgs e)
         {
             RaceStatus = false;
             thread.Abort();
-            //App.ViewModel.ReadFile = null;
+            App.ViewModel.ReadFile = null;
             RaceStart.Visibility = Visibility.Visible;
             RaceStop.Visibility = Visibility.Hidden;
         }
@@ -61,7 +64,7 @@ namespace AUHTC.View
         {
             end = DateTime.Now.AddMinutes(39);
             RaceStatus = true;
-            //App.ViewModel.ReadFile = File.OpenText("../../MediaFiles/c.txt");
+            App.ViewModel.ReadFile = File.OpenText("../../MediaFiles/c.txt");
             thread = new Thread(new ThreadStart(delegate
             {
                 while (true)
@@ -81,7 +84,7 @@ namespace AUHTC.View
             if (thread != null)
                 thread.Abort();
             timer1.Stop();
-            //App.ViewModel.ReadFile = null;
+            App.ViewModel.ReadFile = null;
             ParentAnka.Show();
         }
 
@@ -90,10 +93,6 @@ namespace AUHTC.View
             timer1.Interval = new TimeSpan(0, 0, 0, 0, 10);
             timer1.Tick += new EventHandler(timer1_Tick);
             timer1.Start();
-            //StreamReader sponsoroku = new StreamReader("../../MediaFiles/Sponsor/Sponsor.html");
-            //string htmlicerik = sponsoroku.ReadToEnd().Replace("pathtoimage", "file://" + System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../../MediaFiles/Sponsor");
-            //SponsorWebBrowser.NavigateToString(htmlicerik);
-            //sponsoroku.Close();
         }
 
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)

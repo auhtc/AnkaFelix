@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,8 @@ namespace AUHTC.ViewModel
     public class SerialPortViewModel : INotifyPropertyChanged
     {
         #region Properties And Variables
+
+        public StreamReader ReadFile = null;
 
         private SettingsModel settings;
 
@@ -105,20 +108,15 @@ namespace AUHTC.ViewModel
             settings = database.GetSettingsByMapName(App.CurrentMapName);
 
             rgx_StandartData = new Regex(@"([A-Z]{9},[0-9][0-9][0-9])");
-            rgx_GPSData = new Regex(@"(\$[A-Z]{1,},[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4})");
+            rgx_GPSData = new Regex(@"(\$GPRMC,[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4})");
 
-            //Bu işlemlerin sadece bir kere yapılması yetiyor sanırım. Eğer her seferinde yapılması gerekiyorsa 190. satıra taşınacak!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             Offset1 = new Point(settings.Offset1X, settings.Offset1Y);
             Offset2 = new Point(settings.Offset2X, settings.Offset2Y);
-            //Offset1 = new Point(3978242, 3281838);
-            //Offset2 = new Point(3978033, 3282213);
 
             Point Offset = new Point((Offset2.X - Offset1.X), (Offset2.Y - Offset1.Y));
 
             RatioX = App.AllConstants.MapHeight / Offset.X;
             RatioY = App.AllConstants.MapWidth / Offset.Y;
-            //RatioX = 507 / Offset.X;
-            //RatioY = 700 / Offset.Y;
         }
 
         #endregion
@@ -228,8 +226,8 @@ namespace AUHTC.ViewModel
         private void Marker(string koor1, string koor2)
         {
             //TODO MapImage.top ve MapImage.left ihtiyaç! Kayma oluyor markerda
-            int KoorX = (int)(((int.Parse(koor1.Substring(0, 2)) * 100000) + (int)((float.Parse((koor1.Replace(".", ",")).Substring(2, koor1.Length - 3)) / 60) * 100000) - Offset1.X) * RatioX);
-            int KoorY = (int)(((int.Parse(koor2.Substring(0, 3)) * 100000) + (int)((float.Parse((koor2.Replace(".", ",")).Substring(3, koor2.Length - 4)) / 60) * 100000) - Offset1.Y) * RatioY);
+            int KoorX = App.AllConstants.MapHeight + (int)(((int.Parse(koor1.Substring(0, 2)) * 100000) + (int)((float.Parse((koor1.Replace(".", ",")).Substring(2, koor1.Length - 3)) / 60) * 100000) - Offset1.X) * RatioX);
+            int KoorY = App.AllConstants.MapWidth + (int)(((int.Parse(koor2.Substring(0, 3)) * 100000) + (int)((float.Parse((koor2.Replace(".", ",")).Substring(3, koor2.Length - 4)) / 60) * 100000) - Offset1.Y) * RatioY);
             Koor = new Thickness(KoorY, KoorX, 0, 0);
         }
 
@@ -241,7 +239,50 @@ namespace AUHTC.ViewModel
 
         internal bool ReadData()
         {
-            throw new NotImplementedException();
+            string text = ReadFile.ReadLine();
+
+            if (text == null)
+                return false;
+
+            if (rgx_GPSData.IsMatch(text))
+            {
+                string[] words = text.Split(',');
+                Marker(words[3], words[5]); // Okul mapi için koordinat verisinden sadece 4. ve 6. yı kullanıyorum
+                // Hollanda da meridyen farkı bilmem ne fark gösterme şansı var..
+                BateryPercent(sayi++, 100 - sayi); // Örnek Kullanım
+                if (sayi == 100)
+                    sayi = 0;
+            }
+            return true;
+
+        }
+
+        internal void SaveMapToDB(string mapName, string mapLocation, string offset1, string offset2)
+        {
+            SettingsModel MapData = new SettingsModel();
+            MapData.MapLocation = mapLocation;
+            MapData.MapName = mapName;
+            MapData.Offset1X = float.Parse(offset1.Split(',')[0].Replace('.', ','));
+            MapData.Offset1Y = float.Parse(offset1.Split(',')[1].Replace('.', ','));
+            MapData.Offset2X = float.Parse(offset2.Split(',')[0].Replace('.', ','));
+            MapData.Offset2Y = float.Parse(offset2.Split(',')[1].Replace('.', ','));
+
+            database.SaveSettingsToDB(MapData);
+            //TODO Fonksiyon yazılacak.
+        }
+        internal List<string> ReadAllMapFromDB()
+        {
+            List<string> Liste = new List<string>();
+
+            foreach (var item in database.GetAllSettings())
+            {
+                Liste.Add(item.MapName);
+            }
+            return Liste;
+        }
+        internal SettingsModel ReadMapFromDB(string name)
+        {
+            return database.GetSettingsByMapName(name);
         }
 
         #endregion
@@ -259,10 +300,5 @@ namespace AUHTC.ViewModel
         }
 
         #endregion
-
-        internal void SaveMapToDB(string mapName, string mapLocation, string offset1, string offset2)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

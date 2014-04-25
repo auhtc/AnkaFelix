@@ -1,0 +1,2 @@
+App.xaml içindeki Allconstant doldurulacak.
+Database e map kaydet sil ekle // seçilen resmi kaydet sil

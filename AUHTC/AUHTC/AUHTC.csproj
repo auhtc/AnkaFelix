@@ -139,6 +139,7 @@
     <Resource Include="MediaFiles\Background.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="MediaFiles\TODO.txt" />
     <Resource Include="MediaFiles\Sponsor\aka.jpg" />
     <Resource Include="MediaFiles\Sponsor\matrisled.jpg" />
     <Resource Include="MediaFiles\Sponsor\microsoft.jpg" />
@@ -159,7 +160,6 @@
     <Resource Include="MediaFiles\Batarya\70.png" />
     <Resource Include="MediaFiles\Batarya\80.png" />
     <Resource Include="MediaFiles\Batarya\90.png" />
-    <Content Include="MediaFiles\sponsor.gif" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="MediaFiles\b.txt" />

@@ -35,7 +35,7 @@ namespace AUHTC
             mn.Show();
             DispatcherTimer tm = new DispatcherTimer();
             tm.Tick += new EventHandler(tm_Tick);
-            tm.Interval = new TimeSpan(0, 0, 5);
+            tm.Interval = new TimeSpan(0, 0, 1);
             tm.Start();
         }
 
@@ -62,7 +62,7 @@ namespace AUHTC
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             AUHTC.View.Settings settingsWindow = new AUHTC.View.Settings(this);
-            this.IsEnabled = false;
+            this.Hide();
             settingsWindow.ShowDialog();
         }
 

@@ -15,17 +15,20 @@ namespace AUHTC.ViewModel
         public EntityViewModel()
         {
             entity = new SerialDataRepository();
+            //entity.Database.Delete();
             entity.Database.CreateIfNotExists();
         }
 
         internal void AddSerialDataToDB(ProcessedDataModel data)
         {
             entity.SerialData.Add(data);
+            entity.SaveChanges();
         }
 
         internal void RemoveSerialDataFromDB(ProcessedDataModel data)
         {
             entity.SerialData.Remove(data);
+            entity.SaveChanges();
         }
 
         internal List<ProcessedDataModel> GetSerialDataListByDate(DateTime date)
@@ -66,20 +69,34 @@ namespace AUHTC.ViewModel
         internal void SaveSettingsToDB(SettingsModel settings)
         {
             entity.ProgramSettings.Add(settings);
+            entity.SaveChanges();
         }
 
         internal void RemoveSettingsFromDB(SettingsModel settings)
         {
             entity.ProgramSettings.Remove(settings);
+            entity.SaveChanges();
         }
 
-        internal SettingsModel GetSettingsByMapName(string mapName)
+        internal List<SettingsModel> GetAllSettings()
         {
-            var settings = new SettingsModel();/*(from data in entity.ProgramSettings
-                            where data.MapName == mapName
-                            select data).SingleOrDefault();*/
+            return entity.ProgramSettings.ToList();
+        }
 
-            return settings;
+        internal SettingsModel GetSettingsByMapName(string p)
+        {
+            var query = from oData in entity.ProgramSettings
+                        where oData.MapName == p
+                        select oData;
+
+            SettingsModel result = query.FirstOrDefault<SettingsModel>();
+
+            if (result == null)
+            {
+                return new SettingsModel();
+            }
+
+            return result;
         }
     }
 }

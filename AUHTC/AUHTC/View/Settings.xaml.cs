@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,7 +26,10 @@ namespace AUHTC.View
             InitializeComponent();
             ParentAnka = parent;
 
-            //TODO Veritabanından haritalar çekilip listboxa doldurulacak
+            foreach (string item in App.ViewModel.ReadAllMapFromDB())
+            {
+                MapList.Items.Add(item);
+            }
         }
 
         private void PortNamesCombobox_Loaded(object sender, RoutedEventArgs e)
@@ -51,13 +55,13 @@ namespace AUHTC.View
         {
             SaveSettings();
             this.Close();
-            ParentAnka.IsEnabled = true;
+            ParentAnka.Show();
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-            ParentAnka.IsEnabled = true;
+            ParentAnka.Show();
         }
 
         private void EditMap_Click(object sender, RoutedEventArgs e)
@@ -69,31 +73,41 @@ namespace AUHTC.View
         private void NewMap_Click(object sender, RoutedEventArgs e)
         {
             AddNewMap();
+
+            mapnameTextBox.Text = string.Empty;
+            offsetTextbox1.Text = string.Empty;
+            offsetTextbox2.Text = string.Empty;
+            NewAndEdit.IsEnabled = false;
+            EditControls.IsEnabled = true;
         }
 
         private void SaveMap_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(mapnameTextBox.Text))
+            Regex rgx_Offset = new Regex(@"(\d{2}\.\d{5}\,\d{2}\.\d{5})");
+
+            if (string.IsNullOrEmpty(mapnameTextBox.Text)) // Mapname Unique olsun eğer varsa save çalışsın yoksa add calışsın
             {
                 MessageBox.Show("Harita Adı Girilmedi!");
                 mapnameTextBox.Focus();
             }
-            else if (string.IsNullOrEmpty(offsetTextbox1.Text))//TODO regex yazılacak: else if(regex.IsMatch(offsetTextbox1.Text))
+            else if (!rgx_Offset.IsMatch(offsetTextbox1.Text))
             {
-                MessageBox.Show("İlk Offset Değeri Girilmedi!");
+                MessageBox.Show("İlk Offset Değeri İstenilen Şablona Uymadı!\n\nİstenilen Şablon:\nXX.XXXXX,XX.XXXXX");
                 offsetTextbox1.Focus();
             }
-            else if (string.IsNullOrEmpty(offsetTextbox2.Text))//TODO regex yazılacak: else if(regex.IsMatch(offsetTextbox2.Text))
+            else if (!rgx_Offset.IsMatch(offsetTextbox2.Text))
             {
-                MessageBox.Show("İkinci Offset Değeri Girilmedi!");
+                MessageBox.Show("İkinci Offset Değeri İstenilen Şablona Uymadı!\n\nİstenilen Şablon:\nXX.XXXXX,XX.XXXXX");
                 offsetTextbox2.Focus();
             }
             else
             {
                 string sourceFile = MapImage.Source.ToString().Substring(8);
-                string destinationFile = "/MediaFiles/Maps/" + mapnameTextBox.Text;
-                File.Copy(sourceFile, destinationFile);  //Test edilecek
-
+                string destinationFile = "/MediaFiles/Maps/" + mapnameTextBox.Text + ".jpg"; //TODO Uzantı öğrenilebilir..
+                if (!File.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../.." + destinationFile))
+                {
+                    File.Copy(sourceFile, System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../.." + destinationFile, true); // Dosya varsa hata veriyor
+                }
                 App.ViewModel.SaveMapToDB(mapnameTextBox.Text, destinationFile, offsetTextbox1.Text, offsetTextbox2.Text);
                 EditControls.IsEnabled = false;
                 NewAndEdit.IsEnabled = true;
@@ -110,25 +124,31 @@ namespace AUHTC.View
 
         private void MapList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //TODO seçilen haritanın değerleri Harita Ayarlarındaki ilgili yerlere doldurulacak
+            if (MapList.SelectedIndex != -1)
+            {
+                string FileLocation;
+                var setting = App.ViewModel.ReadMapFromDB(MapList.SelectedItem.ToString());
+                mapnameTextBox.Text = setting.MapName;
+                offsetTextbox1.Text = setting.Offset1X.ToString().Replace(',', '.') + "," + setting.Offset1Y.ToString().Replace(',', '.');
+                offsetTextbox2.Text = setting.Offset2X.ToString().Replace(',', '.') + "," + setting.Offset2Y.ToString().Replace(',', '.');
+                NewAndEdit.IsEnabled = false;
+                EditControls.IsEnabled = true;
+                FileLocation = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../..";
+                MapImage.Source = new BitmapImage(new Uri(FileLocation + setting.MapLocation));
+            }
         }
 
         private void AddNewMap()
         {
             OpenFileDialog map = new OpenFileDialog();
 
-            map.Filter = "*(*.png)|*.png|Tüm dosyalar (*.*)|*.*";
+            map.Filter = "Resim Dosyası (*.png)|*.png|Resim Dosyası (*.jpg)|*.jpg"; // |Tüm dosyalar (*.*)|*.*
             map.Multiselect = false;
             map.RestoreDirectory = true;
             map.Title = "Harita Seçiniz";
 
             if (map.ShowDialog() == true)
             {
-                mapnameTextBox.Text = string.Empty;
-                offsetTextbox1.Text = string.Empty;
-                offsetTextbox2.Text = string.Empty;
-                NewAndEdit.IsEnabled = false;
-                EditControls.IsEnabled = true;
                 MapImage.Source = new BitmapImage(new Uri(map.FileName));
             }
         }
