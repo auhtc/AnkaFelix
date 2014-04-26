@@ -1,2 +1,5 @@
-App.xaml içindeki Allconstant doldurulacak.
+App.xaml içindeki Allconstant doldurulacak.   -----TAMAMLANDI
+	AllConstant doðru dolduðu halde Marker yanlýþ çalýþýyor!
 Database e map kaydet sil ekle // seçilen resmi kaydet sil
+
+//Ýbrahim zamanýn olursa entity framework ile veri tabanýna media file(veri tabanlarýnda BLOB ismiyle tutulurlar) eklenebiliyor mu diye araþtýrabilir misin? Olursa hiç kopyalamayla ya da path'le uðraþmayýz.

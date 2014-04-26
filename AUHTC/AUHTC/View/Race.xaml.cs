@@ -31,6 +31,10 @@ namespace AUHTC.View
         public Race(AnkaFelix parent)
         {
             InitializeComponent();
+            App.AllConstants.MapHeight = MapImage.Source.Height;
+            App.AllConstants.MapWidth = MapImage.Source.Width;
+            App.AllConstants.MapLeft = MapImage.Margin.Left;
+            App.AllConstants.MapTop = MapImage.Margin.Right;
             this.DataContext = App.ViewModel;
             ParentAnka = parent;
         }

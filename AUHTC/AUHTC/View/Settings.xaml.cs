@@ -103,7 +103,8 @@ namespace AUHTC.View
             else
             {
                 string sourceFile = MapImage.Source.ToString().Substring(8);
-                string destinationFile = "/MediaFiles/Maps/" + mapnameTextBox.Text + ".jpg"; //TODO Uzantı öğrenilebilir..
+                string extension = System.IO.Path.GetExtension(sourceFile);
+                string destinationFile = "/MediaFiles/Maps/" + mapnameTextBox.Text + extension;
                 if (!File.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../.." + destinationFile))
                 {
                     File.Copy(sourceFile, System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../.." + destinationFile, true); // Dosya varsa hata veriyor

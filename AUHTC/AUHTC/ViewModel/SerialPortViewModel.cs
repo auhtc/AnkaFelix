@@ -226,8 +226,8 @@ namespace AUHTC.ViewModel
         private void Marker(string koor1, string koor2)
         {
             //TODO MapImage.top ve MapImage.left ihtiyaç! Kayma oluyor markerda
-            int KoorX = App.AllConstants.MapHeight + (int)(((int.Parse(koor1.Substring(0, 2)) * 100000) + (int)((float.Parse((koor1.Replace(".", ",")).Substring(2, koor1.Length - 3)) / 60) * 100000) - Offset1.X) * RatioX);
-            int KoorY = App.AllConstants.MapWidth + (int)(((int.Parse(koor2.Substring(0, 3)) * 100000) + (int)((float.Parse((koor2.Replace(".", ",")).Substring(3, koor2.Length - 4)) / 60) * 100000) - Offset1.Y) * RatioY);
+            int KoorX = (int)App.AllConstants.MapHeight + (int)(((int.Parse(koor1.Substring(0, 2)) * 100000) + (int)((float.Parse((koor1.Replace(".", ",")).Substring(2, koor1.Length - 3)) / 60) * 100000) - Offset1.X) * RatioX);
+            int KoorY = (int)App.AllConstants.MapWidth + (int)(((int.Parse(koor2.Substring(0, 3)) * 100000) + (int)((float.Parse((koor2.Replace(".", ",")).Substring(3, koor2.Length - 4)) / 60) * 100000) - Offset1.Y) * RatioY);
             Koor = new Thickness(KoorY, KoorX, 0, 0);
         }
 
