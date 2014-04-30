@@ -267,6 +267,8 @@ namespace AUHTC.ViewModel
             MapData.Offset2X = float.Parse(offset2.Split(',')[0].Replace('.', ','));
             MapData.Offset2Y = float.Parse(offset2.Split(',')[1].Replace('.', ','));
 
+            settings.MapImage = File.ReadAllBytes(mapLocation);
+
             database.SaveSettingsToDB(MapData);
             //TODO Fonksiyon yazılacak.
         }

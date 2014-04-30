@@ -12,6 +12,8 @@ namespace AUHTC.Model
 
         public string MapName { get; set; }
 
+        public byte[] MapImage { get; set; }
+
         public string MapLocation { get; set; }
 
         public float Offset1X { get; set; }
