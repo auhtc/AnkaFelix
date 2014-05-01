@@ -54,6 +54,7 @@ namespace AUHTC
         public static string CurrentMapName
         {
             get { return currentMapName; }
+            set { currentMapName = value; }
         }
 
         // Otomatik Pilot

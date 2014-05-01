@@ -39,7 +39,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="MapName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">null</Value>
     </Setting>
   </Settings>
 </SettingsFile>

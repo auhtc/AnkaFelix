@@ -68,8 +68,18 @@ namespace AUHTC.ViewModel
 
         internal void SaveSettingsToDB(SettingsModel settings)
         {
-            entity.ProgramSettings.Add(settings);
-            entity.SaveChanges();
+            SettingsModel _setting = GetSettingsById(settings.Id);
+            if (_setting.Id != settings.Id)
+            {
+                entity.ProgramSettings.Add(settings);
+                entity.SaveChanges();
+            }
+            else
+            {
+                entity.ProgramSettings.Remove(_setting);
+                entity.ProgramSettings.Add(settings);
+                entity.SaveChanges();
+            }
         }
 
         internal void RemoveSettingsFromDB(SettingsModel settings)
@@ -87,6 +97,22 @@ namespace AUHTC.ViewModel
         {
             var query = from oData in entity.ProgramSettings
                         where oData.MapName == p
+                        select oData;
+
+            SettingsModel result = query.FirstOrDefault<SettingsModel>();
+
+            if (result == null)
+            {
+                return new SettingsModel();
+            }
+
+            return result;
+        }
+
+        internal SettingsModel GetSettingsById(int p)
+        {
+            var query = from oData in entity.ProgramSettings
+                        where oData.Id == p
                         select oData;
 
             SettingsModel result = query.FirstOrDefault<SettingsModel>();

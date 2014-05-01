@@ -31,10 +31,19 @@ namespace AUHTC.View
         public Race(AnkaFelix parent)
         {
             InitializeComponent();
-            App.AllConstants.MapHeight = MapImage.Source.Height;
-            App.AllConstants.MapWidth = MapImage.Source.Width;
-            App.AllConstants.MapLeft = MapImage.Margin.Left;
-            App.AllConstants.MapTop = MapImage.Margin.Right;
+            byte[] a = App.ViewModel.Settings.MapImage;
+            MapImage.Source = App.ViewModel.Byte2Image(a);
+            if (MapImage.Source == null)
+            {
+                MessageBox.Show("Map Ayarları Yapılmamış");
+            }
+            else
+            {
+                App.AllConstants.MapHeight = MapImage.Source.Height;
+                App.AllConstants.MapWidth = MapImage.Source.Width;
+                App.AllConstants.MapLeft = MapImage.Margin.Left;
+                App.AllConstants.MapTop = MapImage.Margin.Right;
+            }
             this.DataContext = App.ViewModel;
             ParentAnka = parent;
         }
@@ -45,7 +54,6 @@ namespace AUHTC.View
 
         void timer1_Tick(Object sender, EventArgs e)
         {
-
             if (sayi == -1080)
             {
                 sayi = this.Width + 360;

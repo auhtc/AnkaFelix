@@ -77,12 +77,12 @@
                         <TextBox Name="offsetTextbox2" HorizontalAlignment="Center" Height="23" Margin="0,5,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextAlignment="Center"/>
                         <Button Name="SaveMap" Content="Kaydet" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,7,0,0" Height="25px" Width="100px" Click="SaveMap_Click"/>
                     </StackPanel>
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Null" VerticalAlignment="Top" Margin="0,0,0,0" Grid.Column="1"/>
-                    <Image x:Name="MapImage" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform" Source="../MediaFiles/map.png" Width="175" Height="125" Grid.Column="1" Margin="0,18,0,0" MouseDown="MapImage_MouseDown" />
+                    <TextBlock Name="mapidTextBlock" Visibility="Hidden" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Null" VerticalAlignment="Top" Margin="0,0,0,0" Grid.Column="1"/>
+                    <Image x:Name="MapImage" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform" Width="175" Height="125" Grid.Column="1" Margin="0,18,0,0" MouseDown="MapImage_MouseDown" />
                 </Grid>
-                <Grid x:Name="NewAndEdit" Margin="140,5,0,0" Grid.Row="1">
-                    <Button Content="Yeni" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,5,0,0" Height="25px" Width="75" Click="NewMap_Click"/>
-                    <Button Content="Düzenle" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,10,0" Height="25px" Width="75" Click="EditMap_Click"/>
+                <Grid Margin="140,5,0,0" Grid.Row="1">
+                    <Button Name="NewButton" Content="Yeni" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,5,0,0" Height="25px" Width="75" Click="NewMap_Click"/>
+                    <Button Name="CancelButton" Content="İptal" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,10,0" Height="25px" Width="75" Click="CancelMap_Click"/>
                 </Grid>
             </Grid>
         </GroupBox>

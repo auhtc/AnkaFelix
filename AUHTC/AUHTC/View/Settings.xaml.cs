@@ -26,10 +26,7 @@ namespace AUHTC.View
             InitializeComponent();
             ParentAnka = parent;
 
-            foreach (string item in App.ViewModel.ReadAllMapFromDB())
-            {
-                MapList.Items.Add(item);
-            }
+            LoadMapsToList();
         }
 
         private void PortNamesCombobox_Loaded(object sender, RoutedEventArgs e)
@@ -46,7 +43,10 @@ namespace AUHTC.View
         {
             Properties.Settings.Default.DefaultPortName = PortNamesCombobox.SelectedItem.ToString();
             Properties.Settings.Default.DefaultBaudRate = Convert.ToInt32(BaudRatesCombobox.SelectedItem);
+            Properties.Settings.Default.MapName = MapList.SelectedValue.ToString();
             Properties.Settings.Default.Save();
+            App.CurrentMapName = MapList.SelectedValue.ToString();
+            App.ViewModel.Settings = App.ViewModel.ReadMapFromDB(App.CurrentMapName);
 
             // Race içindeki string format = "mm:ss.fff"; satırı kısmına oku yaz yapılcak. Boşluk yasak . : / kullanılabilir.
         }
@@ -64,12 +64,6 @@ namespace AUHTC.View
             ParentAnka.Show();
         }
 
-        private void EditMap_Click(object sender, RoutedEventArgs e)
-        {
-            NewAndEdit.IsEnabled = false;
-            EditControls.IsEnabled = true;
-        }
-
         private void NewMap_Click(object sender, RoutedEventArgs e)
         {
             AddNewMap();
@@ -77,7 +71,8 @@ namespace AUHTC.View
             mapnameTextBox.Text = string.Empty;
             offsetTextbox1.Text = string.Empty;
             offsetTextbox2.Text = string.Empty;
-            NewAndEdit.IsEnabled = false;
+            NewButton.IsEnabled = false;
+            CancelButton.IsEnabled = true;
             EditControls.IsEnabled = true;
         }
 
@@ -85,7 +80,7 @@ namespace AUHTC.View
         {
             Regex rgx_Offset = new Regex(@"(\d{2}\.\d{5}\,\d{2}\.\d{5})");
 
-            if (string.IsNullOrEmpty(mapnameTextBox.Text)) // Mapname Unique olsun eğer varsa save çalışsın yoksa add calışsın
+            if (string.IsNullOrEmpty(mapnameTextBox.Text))
             {
                 MessageBox.Show("Harita Adı Girilmedi!");
                 mapnameTextBox.Focus();
@@ -102,17 +97,35 @@ namespace AUHTC.View
             }
             else
             {
-                string sourceFile = MapImage.Source.ToString().Substring(8);
-                string extension = System.IO.Path.GetExtension(sourceFile);
-                string destinationFile = "/MediaFiles/Maps/" + mapnameTextBox.Text + extension;
-                if (!File.Exists(System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../.." + destinationFile))
-                {
-                    File.Copy(sourceFile, System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../.." + destinationFile, true); // Dosya varsa hata veriyor
-                }
-                App.ViewModel.SaveMapToDB(mapnameTextBox.Text, destinationFile, offsetTextbox1.Text, offsetTextbox2.Text);
+                byte[] byteImage = App.ViewModel.Image2Byte((BitmapImage)MapImage.Source);
+                App.ViewModel.SaveMapToDB(Convert.ToInt32(mapidTextBlock.Text), mapnameTextBox.Text, byteImage, offsetTextbox1.Text, offsetTextbox2.Text);
+
+                mapnameTextBox.Text = string.Empty;
+                offsetTextbox1.Text = string.Empty;
+                offsetTextbox2.Text = string.Empty;
+                NewButton.IsEnabled = false;
+                CancelButton.IsEnabled = true;
+                EditControls.IsEnabled = true;
+                MapImage.Source = null;
+
+                LoadMapsToList();
                 EditControls.IsEnabled = false;
-                NewAndEdit.IsEnabled = true;
+                NewButton.IsEnabled = true;
+                CancelButton.IsEnabled = false;
             }
+        }
+
+        private void LoadMapsToList()
+        {
+            MapList.Items.Clear();
+            var array = App.ViewModel.ReadAllMapFromDB();
+
+            foreach (string item in array)
+            {
+                MapList.Items.Add(item);
+            }
+
+            MapList.SelectedValue = Properties.Settings.Default.MapName;
         }
 
         private void MapImage_MouseDown(object sender, MouseButtonEventArgs e)
@@ -127,15 +140,15 @@ namespace AUHTC.View
         {
             if (MapList.SelectedIndex != -1)
             {
-                string FileLocation;
                 var setting = App.ViewModel.ReadMapFromDB(MapList.SelectedItem.ToString());
+                mapidTextBlock.Text = setting.Id.ToString();
                 mapnameTextBox.Text = setting.MapName;
                 offsetTextbox1.Text = setting.Offset1X.ToString().Replace(',', '.') + "," + setting.Offset1Y.ToString().Replace(',', '.');
                 offsetTextbox2.Text = setting.Offset2X.ToString().Replace(',', '.') + "," + setting.Offset2Y.ToString().Replace(',', '.');
-                NewAndEdit.IsEnabled = false;
+                NewButton.IsEnabled = false;
+                CancelButton.IsEnabled = true;
                 EditControls.IsEnabled = true;
-                FileLocation = System.Reflection.Assembly.GetExecutingAssembly().Location.Replace("\\", "/") + "/../../..";
-                MapImage.Source = new BitmapImage(new Uri(FileLocation + setting.MapLocation));
+                MapImage.Source = App.ViewModel.Byte2Image(setting.MapImage);
             }
         }
 
@@ -152,6 +165,19 @@ namespace AUHTC.View
             {
                 MapImage.Source = new BitmapImage(new Uri(map.FileName));
             }
+        }
+
+        private void CancelMap_Click(object sender, RoutedEventArgs e)
+        {
+                mapnameTextBox.Text = string.Empty;
+                offsetTextbox1.Text = string.Empty;
+                offsetTextbox2.Text = string.Empty;
+                NewButton.IsEnabled = true;
+                CancelButton.IsEnabled = false;
+                EditControls.IsEnabled = false;
+                MapImage.Source = null;
+
+                LoadMapsToList();
         }
     }
 }

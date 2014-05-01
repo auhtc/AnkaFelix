@@ -40,7 +40,7 @@
             </GroupBox>
         </Grid>
 
-        <Image Name="MapImage" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Source="../MediaFiles/map.png"/>
+        <Image Name="MapImage" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform"/>
         <Label Grid.Column="1" Grid.Row="1" Height="8" Width="8" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Red" Margin="{Binding Koor}"/>
         <GroupBox Grid.Column="2" Header="Araç Bilgileri" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid>

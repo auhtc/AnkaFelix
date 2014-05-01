@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace AUHTC.ViewModel
@@ -21,8 +22,6 @@ namespace AUHTC.ViewModel
         #region Properties And Variables
 
         public StreamReader ReadFile = null;
-
-        private SettingsModel settings;
 
         private Regex rgx_StandartData;
         private Regex rgx_GPSData;
@@ -67,6 +66,8 @@ namespace AUHTC.ViewModel
             }
         }
 
+        public SettingsModel Settings { get; set; }
+
         private ImageSource bateryImage2;
         public ImageSource BateryImage2
         {
@@ -105,13 +106,13 @@ namespace AUHTC.ViewModel
         {
             database = new EntityViewModel();
             serialPort = new SerialPort();
-            settings = database.GetSettingsByMapName(App.CurrentMapName);
+            Settings = database.GetSettingsByMapName(App.CurrentMapName);
 
             rgx_StandartData = new Regex(@"([A-Z]{9},[0-9][0-9][0-9])");
             rgx_GPSData = new Regex(@"(\$GPRMC,[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4})");
 
-            Offset1 = new Point(settings.Offset1X, settings.Offset1Y);
-            Offset2 = new Point(settings.Offset2X, settings.Offset2Y);
+            Offset1 = new Point(Settings.Offset1X, Settings.Offset1Y);
+            Offset2 = new Point(Settings.Offset2X, Settings.Offset2Y);
 
             Point Offset = new Point((Offset2.X - Offset1.X), (Offset2.Y - Offset1.Y));
 
@@ -257,21 +258,46 @@ namespace AUHTC.ViewModel
 
         }
 
-        internal void SaveMapToDB(string mapName, string mapLocation, string offset1, string offset2)
+        internal void SaveMapToDB(int id, string mapName, byte[] mapImage, string offset1, string offset2)
         {
             SettingsModel MapData = new SettingsModel();
-            MapData.MapLocation = mapLocation;
+            MapData.Id = id;
             MapData.MapName = mapName;
             MapData.Offset1X = float.Parse(offset1.Split(',')[0].Replace('.', ','));
             MapData.Offset1Y = float.Parse(offset1.Split(',')[1].Replace('.', ','));
             MapData.Offset2X = float.Parse(offset2.Split(',')[0].Replace('.', ','));
             MapData.Offset2Y = float.Parse(offset2.Split(',')[1].Replace('.', ','));
-
-            settings.MapImage = File.ReadAllBytes(mapLocation);
+            MapData.MapImage = mapImage;
 
             database.SaveSettingsToDB(MapData);
-            //TODO Fonksiyon yazılacak.
         }
+        public byte[] Image2Byte(BitmapImage imageC)
+        {
+            MemoryStream memStream = new MemoryStream();
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(imageC));
+            encoder.Save(memStream);
+            return memStream.GetBuffer();
+        }
+
+        public ImageSource Byte2Image(byte[] byteArrayIn)
+        {
+            var image = new BitmapImage();
+            if (byteArrayIn == null || byteArrayIn.Length == 0)
+                return null;
+
+            var mem = new MemoryStream(byteArrayIn);
+            mem.Position = 0;
+            image.BeginInit();
+            image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.UriSource = null;
+            image.StreamSource = mem;
+            image.EndInit();
+            image.Freeze();
+            return image;
+        }
+
         internal List<string> ReadAllMapFromDB()
         {
             List<string> Liste = new List<string>();
