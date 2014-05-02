@@ -27,14 +27,8 @@ namespace AUHTC.ViewModel
         private Regex rgx_GPSData;
 
         private SerialPort serialPort;
-        private EntityViewModel database;
 
         private string recievedData;
-
-        private Point Offset1 { get; set; }
-        private Point Offset2 { get; set; }
-        private double RatioX { get; set; }
-        private double RatioY { get; set; }
 
         int sayi = 0;
 
@@ -65,8 +59,6 @@ namespace AUHTC.ViewModel
                 }
             }
         }
-
-        public SettingsModel Settings { get; set; }
 
         private ImageSource bateryImage2;
         public ImageSource BateryImage2
@@ -104,20 +96,11 @@ namespace AUHTC.ViewModel
 
         public SerialPortViewModel()
         {
-            database = new EntityViewModel();
             serialPort = new SerialPort();
-            Settings = database.GetSettingsByMapName(App.CurrentMapName);
 
             rgx_StandartData = new Regex(@"([A-Z]{9},[0-9][0-9][0-9])");
             rgx_GPSData = new Regex(@"(\$GPRMC,[0-9\.]{9},[A-Z],[0-9\.]{10},[A-Z],[0-9\.]{11},[A-Z],[0-9\.]{5},[0-9\.]{0,6},[0-9]{6},,,[0-9A-Z\*]{4})");
 
-            Offset1 = new Point(Settings.Offset1X, Settings.Offset1Y);
-            Offset2 = new Point(Settings.Offset2X, Settings.Offset2Y);
-
-            Point Offset = new Point((Offset2.X - Offset1.X), (Offset2.Y - Offset1.Y));
-
-            RatioX = App.AllConstants.MapHeight / Offset.X;
-            RatioY = App.AllConstants.MapWidth / Offset.Y;
         }
 
         #endregion
@@ -216,7 +199,7 @@ namespace AUHTC.ViewModel
 
         private void SaveDataToDb(ProcessedDataModel data)
         {
-            database.AddSerialDataToDB(data);
+            App.Database.AddSerialDataToDB(data);
         }
 
         internal void EndDataRead()
@@ -227,8 +210,8 @@ namespace AUHTC.ViewModel
         private void Marker(string koor1, string koor2)
         {
             //TODO MapImage.top ve MapImage.left ihtiyaç! Kayma oluyor markerda
-            int KoorX = (int)App.AllConstants.MapHeight + (int)(((int.Parse(koor1.Substring(0, 2)) * 100000) + (int)((float.Parse((koor1.Replace(".", ",")).Substring(2, koor1.Length - 3)) / 60) * 100000) - Offset1.X) * RatioX);
-            int KoorY = (int)App.AllConstants.MapWidth + (int)(((int.Parse(koor2.Substring(0, 3)) * 100000) + (int)((float.Parse((koor2.Replace(".", ",")).Substring(3, koor2.Length - 4)) / 60) * 100000) - Offset1.Y) * RatioY);
+            int KoorX = (int)App.AllConstants.MapTop + (int)(((int.Parse(koor1.Substring(0, 2)) * 100000) + (int)((float.Parse((koor1.Replace(".", ",")).Substring(2, koor1.Length - 3)) / 60) * 100000) - App.AllConstants.Offset.X) * App.AllConstants.RatioX);
+            int KoorY = (int)App.AllConstants.MapLeft + (int)(((int.Parse(koor2.Substring(0, 3)) * 100000) + (int)((float.Parse((koor2.Replace(".", ",")).Substring(3, koor2.Length - 4)) / 60) * 100000) - App.AllConstants.Offset.Y) * App.AllConstants.RatioY);
             Koor = new Thickness(KoorY, KoorX, 0, 0);
         }
 
@@ -263,13 +246,13 @@ namespace AUHTC.ViewModel
             SettingsModel MapData = new SettingsModel();
             MapData.Id = id;
             MapData.MapName = mapName;
-            MapData.Offset1X = float.Parse(offset1.Split(',')[0].Replace('.', ','));
-            MapData.Offset1Y = float.Parse(offset1.Split(',')[1].Replace('.', ','));
-            MapData.Offset2X = float.Parse(offset2.Split(',')[0].Replace('.', ','));
-            MapData.Offset2Y = float.Parse(offset2.Split(',')[1].Replace('.', ','));
+            MapData.Offset1X = offset1.Split(',')[0];
+            MapData.Offset1Y = offset1.Split(',')[1];
+            MapData.Offset2X = offset2.Split(',')[0];
+            MapData.Offset2Y = offset2.Split(',')[1];
             MapData.MapImage = mapImage;
 
-            database.SaveSettingsToDB(MapData);
+            App.Database.SaveSettingsToDB(MapData);
         }
         public byte[] Image2Byte(BitmapImage imageC)
         {
@@ -302,7 +285,7 @@ namespace AUHTC.ViewModel
         {
             List<string> Liste = new List<string>();
 
-            foreach (var item in database.GetAllSettings())
+            foreach (var item in App.Database.GetAllSettings())
             {
                 Liste.Add(item.MapName);
             }
@@ -310,7 +293,7 @@ namespace AUHTC.ViewModel
         }
         internal SettingsModel ReadMapFromDB(string name)
         {
-            return database.GetSettingsByMapName(name);
+            return App.Database.GetSettingsByMapName(name);
         }
 
         #endregion

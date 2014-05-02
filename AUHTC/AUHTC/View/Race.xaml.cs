@@ -28,29 +28,19 @@ namespace AUHTC.View
         AnkaFelix ParentAnka;
         public double sayi = 1366;
         bool RaceStatus = false;
-        public Race(AnkaFelix parent)
+        public Race(AnkaFelix parent,ImageSource mapimage)
         {
             InitializeComponent();
-            byte[] a = App.ViewModel.Settings.MapImage;
-            MapImage.Source = App.ViewModel.Byte2Image(a);
-            if (MapImage.Source == null)
-            {
-                MessageBox.Show("Map Ayarları Yapılmamış");
-            }
-            else
-            {
-                App.AllConstants.MapHeight = MapImage.Source.Height;
-                App.AllConstants.MapWidth = MapImage.Source.Width;
-                App.AllConstants.MapLeft = MapImage.Margin.Left;
-                App.AllConstants.MapTop = MapImage.Margin.Right;
-            }
             this.DataContext = App.ViewModel;
+
+            MapImage.Source = mapimage;
+            App.AllConstants.Inıt(MapImage);
+
             ParentAnka = parent;
         }
 
         DispatcherTimer timer1 = new DispatcherTimer();
         DateTime end;
-        string format = "mm:ss.fff";
 
         void timer1_Tick(Object sender, EventArgs e)
         {
@@ -59,7 +49,7 @@ namespace AUHTC.View
                 sayi = this.Width + 360;
             }
             if (RaceStatus == true)
-                CountdownTextBlock.Text = string.Format("{0:" + format.Replace(":", "\\:").Replace(".", "\\.") + "}", end - DateTime.Now);
+                CountdownTextBlock.Text = string.Format("{0:" + AUHTC.Properties.Settings.Default.CountDownFormat.Replace(":", "\\:").Replace(".", "\\.") + "}", end - DateTime.Now);
             SponsorPanel.Margin = new Thickness(sayi--, SponsorPanel.Margin.Top, SponsorPanel.Margin.Right, SponsorPanel.Margin.Bottom);
         }
 

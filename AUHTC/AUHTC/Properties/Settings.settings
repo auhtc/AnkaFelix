@@ -41,5 +41,8 @@
     <Setting Name="MapName" Type="System.String" Scope="User">
       <Value Profile="(Default)">null</Value>
     </Setting>
+    <Setting Name="CountDownFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mm:ss.fff</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

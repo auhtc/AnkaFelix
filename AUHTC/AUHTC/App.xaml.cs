@@ -14,6 +14,8 @@ namespace AUHTC
     {
         #region Properties And Variables
 
+        public static EntityViewModel Database { get; set; }
+
         private static SerialPortViewModel viewModel;
         public static SerialPortViewModel ViewModel
         {
@@ -129,6 +131,7 @@ namespace AUHTC
             islemler = AUHTC.Properties.Settings.Default.Islemler.Split(';').ToList();
             defaultIslem = AUHTC.Properties.Settings.Default.DefaultIslem;
 
+            Database = new EntityViewModel();
             allConstants = new Constants();
             viewModel = new SerialPortViewModel();
         }

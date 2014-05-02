@@ -14,13 +14,13 @@ namespace AUHTC.Model
 
         public byte[] MapImage { get; set; }
 
-        public float Offset1X { get; set; }
+        public string Offset1X { get; set; }
 
-        public float Offset1Y { get; set; }
+        public string Offset1Y { get; set; }
 
-        public float Offset2X { get; set; }
+        public string Offset2X { get; set; }
 
-        public float Offset2Y { get; set; }
+        public string Offset2Y { get; set; }
 
     }
 }

@@ -61,16 +61,27 @@ namespace AUHTC
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            AUHTC.View.Settings settingsWindow = new AUHTC.View.Settings(this);
             this.Hide();
+            AUHTC.View.Settings settingsWindow = new AUHTC.View.Settings(this);
             settingsWindow.ShowDialog();
         }
 
         private void mapStart_Click(object sender, RoutedEventArgs e)
         {
-            AUHTC.View.Race mapWindow = new AUHTC.View.Race(this);
             this.Hide();
-            mapWindow.ShowDialog();
+            if (App.AllConstants.Setting == null)
+            {
+                MessageBox.Show("Map Ayarları Yapılmamış");
+                AUHTC.View.Settings settingsWindow = new AUHTC.View.Settings(this);
+                settingsWindow.ShowDialog();
+            }
+            else
+            {
+                byte[] a = App.AllConstants.Setting.MapImage;
+                ImageSource map = App.ViewModel.Byte2Image(a);
+                AUHTC.View.Race mapWindow = new AUHTC.View.Race(this,map);
+                mapWindow.ShowDialog();
+            }
         }
 
         private void tm_Tick(object sender, EventArgs e)

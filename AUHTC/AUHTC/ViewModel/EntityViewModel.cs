@@ -69,7 +69,7 @@ namespace AUHTC.ViewModel
         internal void SaveSettingsToDB(SettingsModel settings)
         {
             SettingsModel _setting = GetSettingsById(settings.Id);
-            if (_setting.Id != settings.Id)
+            if (_setting == null)
             {
                 entity.ProgramSettings.Add(settings);
                 entity.SaveChanges();
@@ -101,11 +101,6 @@ namespace AUHTC.ViewModel
 
             SettingsModel result = query.FirstOrDefault<SettingsModel>();
 
-            if (result == null)
-            {
-                return new SettingsModel();
-            }
-
             return result;
         }
 
@@ -116,11 +111,6 @@ namespace AUHTC.ViewModel
                         select oData;
 
             SettingsModel result = query.FirstOrDefault<SettingsModel>();
-
-            if (result == null)
-            {
-                return new SettingsModel();
-            }
 
             return result;
         }

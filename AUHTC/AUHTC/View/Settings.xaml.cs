@@ -27,6 +27,7 @@ namespace AUHTC.View
             ParentAnka = parent;
 
             LoadMapsToList();
+            countTextBox.Text = AUHTC.Properties.Settings.Default.CountDownFormat;
         }
 
         private void PortNamesCombobox_Loaded(object sender, RoutedEventArgs e)
@@ -44,9 +45,10 @@ namespace AUHTC.View
             Properties.Settings.Default.DefaultPortName = PortNamesCombobox.SelectedItem.ToString();
             Properties.Settings.Default.DefaultBaudRate = Convert.ToInt32(BaudRatesCombobox.SelectedItem);
             Properties.Settings.Default.MapName = MapList.SelectedValue.ToString();
+            AUHTC.Properties.Settings.Default.CountDownFormat = countTextBox.Text;
             Properties.Settings.Default.Save();
             App.CurrentMapName = MapList.SelectedValue.ToString();
-            App.ViewModel.Settings = App.ViewModel.ReadMapFromDB(App.CurrentMapName);
+            App.AllConstants.Setting = App.ViewModel.ReadMapFromDB(App.CurrentMapName);
 
             // Race içindeki string format = "mm:ss.fff"; satırı kısmına oku yaz yapılcak. Boşluk yasak . : / kullanılabilir.
         }
@@ -72,7 +74,7 @@ namespace AUHTC.View
             offsetTextbox1.Text = string.Empty;
             offsetTextbox2.Text = string.Empty;
             NewButton.IsEnabled = false;
-            CancelButton.IsEnabled = true;
+            CancelButton.Visibility = Visibility.Visible; EditButton.Visibility = Visibility.Hidden;
             EditControls.IsEnabled = true;
         }
 
@@ -97,21 +99,19 @@ namespace AUHTC.View
             }
             else
             {
+                int Mapid = (mapidTextBlock.Text != "Null") ? Convert.ToInt32(mapidTextBlock.Text) : 1;
                 byte[] byteImage = App.ViewModel.Image2Byte((BitmapImage)MapImage.Source);
-                App.ViewModel.SaveMapToDB(Convert.ToInt32(mapidTextBlock.Text), mapnameTextBox.Text, byteImage, offsetTextbox1.Text, offsetTextbox2.Text);
+                App.ViewModel.SaveMapToDB(Mapid, mapnameTextBox.Text, byteImage, offsetTextbox1.Text, offsetTextbox2.Text);
 
                 mapnameTextBox.Text = string.Empty;
                 offsetTextbox1.Text = string.Empty;
                 offsetTextbox2.Text = string.Empty;
-                NewButton.IsEnabled = false;
-                CancelButton.IsEnabled = true;
-                EditControls.IsEnabled = true;
-                MapImage.Source = null;
 
                 LoadMapsToList();
                 EditControls.IsEnabled = false;
                 NewButton.IsEnabled = true;
-                CancelButton.IsEnabled = false;
+                CancelButton.Visibility = Visibility.Hidden; 
+                EditButton.Visibility = Visibility.Visible;
             }
         }
 
@@ -143,11 +143,8 @@ namespace AUHTC.View
                 var setting = App.ViewModel.ReadMapFromDB(MapList.SelectedItem.ToString());
                 mapidTextBlock.Text = setting.Id.ToString();
                 mapnameTextBox.Text = setting.MapName;
-                offsetTextbox1.Text = setting.Offset1X.ToString().Replace(',', '.') + "," + setting.Offset1Y.ToString().Replace(',', '.');
-                offsetTextbox2.Text = setting.Offset2X.ToString().Replace(',', '.') + "," + setting.Offset2Y.ToString().Replace(',', '.');
-                NewButton.IsEnabled = false;
-                CancelButton.IsEnabled = true;
-                EditControls.IsEnabled = true;
+                offsetTextbox1.Text = setting.Offset1X + "," + setting.Offset1Y;
+                offsetTextbox2.Text = setting.Offset2X + "," + setting.Offset2Y;
                 MapImage.Source = App.ViewModel.Byte2Image(setting.MapImage);
             }
         }
@@ -169,15 +166,23 @@ namespace AUHTC.View
 
         private void CancelMap_Click(object sender, RoutedEventArgs e)
         {
-                mapnameTextBox.Text = string.Empty;
-                offsetTextbox1.Text = string.Empty;
-                offsetTextbox2.Text = string.Empty;
-                NewButton.IsEnabled = true;
-                CancelButton.IsEnabled = false;
-                EditControls.IsEnabled = false;
-                MapImage.Source = null;
+            mapnameTextBox.Text = string.Empty;
+            offsetTextbox1.Text = string.Empty;
+            offsetTextbox2.Text = string.Empty;
 
-                LoadMapsToList();
+            LoadMapsToList();
+            NewButton.IsEnabled = true;
+            CancelButton.Visibility = Visibility.Hidden;
+            EditButton.Visibility = Visibility.Visible;
+            EditControls.IsEnabled = false;
+        }
+
+        private void EditMap_Click(object sender, RoutedEventArgs e)
+        {
+            NewButton.IsEnabled = false;
+            CancelButton.Visibility = Visibility.Visible;
+            EditButton.Visibility = Visibility.Hidden;
+            EditControls.IsEnabled = true;
         }
     }
 }

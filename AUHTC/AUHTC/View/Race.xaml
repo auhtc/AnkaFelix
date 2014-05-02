@@ -34,8 +34,8 @@
             </GroupBox>
             <GroupBox Header="GroupBox" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" >
                 <Grid>
-                    <Image Name="Batarya1" HorizontalAlignment="Left" Height="118" VerticalAlignment="Bottom" Width="81" Margin="10,0,0,10" Stretch="Uniform" Source="{Binding BataryaImage1}"/>
-                    <Image Name="Batarya2" HorizontalAlignment="Right" Height="118" VerticalAlignment="Bottom" Width="81" Margin="0,0,10,10" Stretch="Uniform" Source="{Binding BataryaImage2}"/>
+                    <Image Name="Batarya1" HorizontalAlignment="Left" Height="118" VerticalAlignment="Bottom" Width="81" Margin="10,0,0,10" Stretch="Uniform" Source="{Binding BateryImage1}"/>
+                    <Image Name="Batarya2" HorizontalAlignment="Right" Height="118" VerticalAlignment="Bottom" Width="81" Margin="0,0,10,10" Stretch="Uniform" Source="{Binding BateryImage2}"/>
                 </Grid>
             </GroupBox>
         </Grid>

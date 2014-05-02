@@ -82,7 +82,8 @@
                 </Grid>
                 <Grid Margin="140,5,0,0" Grid.Row="1">
                     <Button Name="NewButton" Content="Yeni" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,5,0,0" Height="25px" Width="75" Click="NewMap_Click"/>
-                    <Button Name="CancelButton" Content="İptal" IsEnabled="False" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,10,0" Height="25px" Width="75" Click="CancelMap_Click"/>
+                    <Button Name="CancelButton" Content="İptal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,10,0" Height="25px" Width="75" Click="CancelMap_Click"/>
+                    <Button Name="EditButton" Content="Düzenle" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,10,0" Height="25px" Width="75" Click="EditMap_Click"/>
                 </Grid>
             </Grid>
         </GroupBox>
