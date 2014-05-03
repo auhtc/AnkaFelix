@@ -1,18 +1,7 @@
 ﻿using AUHTC.View;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace AUHTC
@@ -39,26 +28,6 @@ namespace AUHTC
             tm.Start();
         }
 
-        private void connStart_Click(object sender, RoutedEventArgs e)
-        {
-            ProcessedDataViews.DataContext = App.ViewModel.Data;
-
-            if (App.ViewModel.ReadDataFromPort(Properties.Settings.Default.DefaultPortName, Properties.Settings.Default.DefaultBaudRate.ToString()))
-            {
-                SettingsButton.IsEnabled = false;
-                connStart.Visibility = Visibility.Hidden;
-                connEnd.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void connEnd_Click(object sender, RoutedEventArgs e)
-        {
-            App.ViewModel.EndDataRead();
-            SettingsButton.IsEnabled = true;
-            connStart.Visibility = Visibility.Visible;
-            connEnd.Visibility = Visibility.Hidden;
-        }
-
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
@@ -68,20 +37,25 @@ namespace AUHTC
 
         private void mapStart_Click(object sender, RoutedEventArgs e)
         {
-            this.Hide();
             if (App.AllConstants.Setting == null)
             {
                 MessageBox.Show("Map Ayarları Yapılmamış");
                 AUHTC.View.Settings settingsWindow = new AUHTC.View.Settings(this);
                 settingsWindow.ShowDialog();
             }
+            else if (!App.ViewModel.ReadDataFromPort(Properties.Settings.Default.DefaultPortName, Properties.Settings.Default.DefaultBaudRate.ToString()))
+            {
+                return;
+            }
             else
             {
                 byte[] a = App.AllConstants.Setting.MapImage;
                 ImageSource map = App.ViewModel.Byte2Image(a);
-                AUHTC.View.Race mapWindow = new AUHTC.View.Race(this,map);
+                AUHTC.View.Race mapWindow = new AUHTC.View.Race(this, map);
                 mapWindow.ShowDialog();
             }
+
+            this.Hide();
         }
 
         private void tm_Tick(object sender, EventArgs e)
@@ -89,6 +63,16 @@ namespace AUHTC
             mn.Close();
             this.Visibility = Visibility.Visible;
             ((DispatcherTimer)sender).Stop();
+        }
+
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            App.ViewModel.EndDataRead();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            App.ViewModel.EndDataRead();
         }
     }
 }

@@ -24,7 +24,6 @@ namespace AUHTC.View
     /// </summary>
     public partial class Race : Window
     {
-        Thread thread;
         AnkaFelix ParentAnka;
         public double sayi = 1366;
         bool RaceStatus = false;
@@ -56,8 +55,6 @@ namespace AUHTC.View
         private void RaceStop_Click(object sender, RoutedEventArgs e)
         {
             RaceStatus = false;
-            thread.Abort();
-            App.ViewModel.ReadFile = null;
             RaceStart.Visibility = Visibility.Visible;
             RaceStop.Visibility = Visibility.Hidden;
         }
@@ -66,27 +63,26 @@ namespace AUHTC.View
         {
             end = DateTime.Now.AddMinutes(39);
             RaceStatus = true;
-            App.ViewModel.ReadFile = File.OpenText("../../MediaFiles/c.txt");
-            thread = new Thread(new ThreadStart(delegate
-            {
-                while (true)
-                {
-                    if (!App.ViewModel.ReadData())
-                        thread.Abort();
-                    Thread.Sleep(100);
-                }
-            }));
-            thread.Start();
             RaceStop.Visibility = Visibility.Visible;
             RaceStart.Visibility = Visibility.Hidden;
+
+
+            //App.ViewModel.ReadFile = File.OpenText("../../MediaFiles/c.txt");
+            //thread = new Thread(new ThreadStart(delegate
+            //{
+            //    while (true)
+            //    {
+            //        if (!App.ViewModel.ReadData())
+            //            thread.Abort();
+            //        Thread.Sleep(100);
+            //    }
+            //}));
+            //thread.Start();
         }
 
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
-            if (thread != null)
-                thread.Abort();
             timer1.Stop();
-            App.ViewModel.ReadFile = null;
             ParentAnka.Show();
         }
 

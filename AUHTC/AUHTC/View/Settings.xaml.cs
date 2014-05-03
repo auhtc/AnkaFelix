@@ -1,19 +1,10 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace AUHTC.View
 {
@@ -49,8 +40,6 @@ namespace AUHTC.View
             Properties.Settings.Default.Save();
             App.CurrentMapName = MapList.SelectedValue.ToString();
             App.AllConstants.Setting = App.ViewModel.ReadMapFromDB(App.CurrentMapName);
-
-            // Race içindeki string format = "mm:ss.fff"; satırı kısmına oku yaz yapılcak. Boşluk yasak . : / kullanılabilir.
         }
 
         private void OkeyButton_Click(object sender, RoutedEventArgs e)

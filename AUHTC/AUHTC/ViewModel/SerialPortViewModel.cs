@@ -1,15 +1,11 @@
 ﻿using AUHTC.Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -20,8 +16,6 @@ namespace AUHTC.ViewModel
     public class SerialPortViewModel : INotifyPropertyChanged
     {
         #region Properties And Variables
-
-        public StreamReader ReadFile = null;
 
         private Regex rgx_StandartData;
         private Regex rgx_GPSData;
@@ -158,18 +152,16 @@ namespace AUHTC.ViewModel
                             data.Value = Convert.ToInt32(recievedData.Split(',')[1]);
                             data.RecordDate = DateTime.Now;
                             data.Type = "Standart Data";
-                            SaveDataToDb(data);
+
                             // Hiz OrtalamaHiz Sicaklik Batarya1 Batarya2 Time değişkenleri Bind için hazır.
-                            // Data hiç değişmemiş bind eder mi?
                             // HesapOrtalamaHiz HesapKalanSure HesapHarcananEnerji HesapTahminiEnerji HesapBitirmeOrtalamaHiz değerleri bind için hazır hesaplanacaklar.
+
+                            SaveDataToDb(data);
                         }
                         else if (rgx_GPSData.IsMatch(recievedData))
                         {
                             string[] words = recievedData.Split(',');
-                            Marker(words[3], words[5]);// Okul mapi için koordinat verisinden sadece 4. ve 6. yı kullanıyorum
-                            // Hollanda da meridyen farkı bilmem ne fark gösterme şansı var..
-
-                            // Örnek Kullanım
+                            Marker(words[3], words[5]);
                             BateryPercent(sayi++, 100 - sayi);
                             sayi %= 100;
 
@@ -209,7 +201,6 @@ namespace AUHTC.ViewModel
 
         private void Marker(string koor1, string koor2)
         {
-            //TODO MapImage.top ve MapImage.left ihtiyaç! Kayma oluyor markerda
             int KoorX = (int)App.AllConstants.MapTop + (int)(((int.Parse(koor1.Substring(0, 2)) * 100000) + (int)((float.Parse((koor1.Replace(".", ",")).Substring(2, koor1.Length - 3)) / 60) * 100000) - App.AllConstants.Offset.X) * App.AllConstants.RatioX);
             int KoorY = (int)App.AllConstants.MapLeft + (int)(((int.Parse(koor2.Substring(0, 3)) * 100000) + (int)((float.Parse((koor2.Replace(".", ",")).Substring(3, koor2.Length - 4)) / 60) * 100000) - App.AllConstants.Offset.Y) * App.AllConstants.RatioY);
             Koor = new Thickness(KoorY, KoorX, 0, 0);
@@ -219,26 +210,6 @@ namespace AUHTC.ViewModel
         {
             BateryImage1 = new ImageSourceConverter().ConvertFromString("../../MediaFiles/Batarya/" + ((bat1 - 1) - ((bat1 - 1) % 10)) + ".png") as ImageSource;
             BateryImage2 = new ImageSourceConverter().ConvertFromString("../../MediaFiles/Batarya/" + ((bat2 - 1) - ((bat2 - 1) % 10)) + ".png") as ImageSource;
-        }
-
-        internal bool ReadData()
-        {
-            string text = ReadFile.ReadLine();
-
-            if (text == null)
-                return false;
-
-            if (rgx_GPSData.IsMatch(text))
-            {
-                string[] words = text.Split(',');
-                Marker(words[3], words[5]); // Okul mapi için koordinat verisinden sadece 4. ve 6. yı kullanıyorum
-                // Hollanda da meridyen farkı bilmem ne fark gösterme şansı var..
-                BateryPercent(sayi++, 100 - sayi); // Örnek Kullanım
-                if (sayi == 100)
-                    sayi = 0;
-            }
-            return true;
-
         }
 
         internal void SaveMapToDB(int id, string mapName, byte[] mapImage, string offset1, string offset2)
@@ -254,6 +225,7 @@ namespace AUHTC.ViewModel
 
             App.Database.SaveSettingsToDB(MapData);
         }
+        
         public byte[] Image2Byte(BitmapImage imageC)
         {
             MemoryStream memStream = new MemoryStream();
@@ -291,6 +263,7 @@ namespace AUHTC.ViewModel
             }
             return Liste;
         }
+        
         internal SettingsModel ReadMapFromDB(string name)
         {
             return App.Database.GetSettingsByMapName(name);
