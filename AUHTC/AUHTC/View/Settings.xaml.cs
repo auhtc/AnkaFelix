@@ -1,5 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using AUHTC.Model;
+using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -65,6 +67,7 @@ namespace AUHTC.View
             NewButton.IsEnabled = false;
             CancelButton.Visibility = Visibility.Visible; EditButton.Visibility = Visibility.Hidden;
             EditControls.IsEnabled = true;
+            mapnameTextBox.IsEnabled = true;
         }
 
         private void SaveMap_Click(object sender, RoutedEventArgs e)
@@ -88,9 +91,8 @@ namespace AUHTC.View
             }
             else
             {
-                int Mapid = (mapidTextBlock.Text != "Null") ? Convert.ToInt32(mapidTextBlock.Text) : 1;
                 byte[] byteImage = App.ViewModel.Image2Byte((BitmapImage)MapImage.Source);
-                App.ViewModel.SaveMapToDB(Mapid, mapnameTextBox.Text, byteImage, offsetTextbox1.Text, offsetTextbox2.Text);
+                App.ViewModel.SaveMapToDB(mapnameTextBox.Text, byteImage, offsetTextbox1.Text, offsetTextbox2.Text);
 
                 mapnameTextBox.Text = string.Empty;
                 offsetTextbox1.Text = string.Empty;
@@ -99,7 +101,7 @@ namespace AUHTC.View
                 LoadMapsToList();
                 EditControls.IsEnabled = false;
                 NewButton.IsEnabled = true;
-                CancelButton.Visibility = Visibility.Hidden; 
+                CancelButton.Visibility = Visibility.Hidden;
                 EditButton.Visibility = Visibility.Visible;
             }
         }
@@ -107,14 +109,17 @@ namespace AUHTC.View
         private void LoadMapsToList()
         {
             MapList.Items.Clear();
-            var array = App.ViewModel.ReadAllMapFromDB();
+            List<SettingsModel> allSettings = App.Database.GetAllSettings();
 
-            foreach (string item in array)
+            foreach (SettingsModel setting in allSettings)
             {
-                MapList.Items.Add(item);
+                MapList.Items.Add(setting);
+                if (Properties.Settings.Default.MapName == setting.MapName)
+                {
+                    MapList.SelectedValue = setting;
+                }
             }
 
-            MapList.SelectedValue = Properties.Settings.Default.MapName;
         }
 
         private void MapImage_MouseDown(object sender, MouseButtonEventArgs e)
@@ -129,8 +134,7 @@ namespace AUHTC.View
         {
             if (MapList.SelectedIndex != -1)
             {
-                var setting = App.ViewModel.ReadMapFromDB(MapList.SelectedItem.ToString());
-                mapidTextBlock.Text = setting.Id.ToString();
+                SettingsModel setting = MapList.SelectedItem as SettingsModel;
                 mapnameTextBox.Text = setting.MapName;
                 offsetTextbox1.Text = setting.Offset1X + "," + setting.Offset1Y;
                 offsetTextbox2.Text = setting.Offset2X + "," + setting.Offset2Y;
@@ -172,6 +176,7 @@ namespace AUHTC.View
             CancelButton.Visibility = Visibility.Visible;
             EditButton.Visibility = Visibility.Hidden;
             EditControls.IsEnabled = true;
+            mapnameTextBox.IsEnabled = false;
         }
     }
 }

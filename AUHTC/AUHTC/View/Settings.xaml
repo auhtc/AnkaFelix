@@ -54,7 +54,14 @@
             </StackPanel>
         </Button>
         <GroupBox Header="Haritalar" HorizontalAlignment="Left" VerticalAlignment="Top" Height="85" Width="330" Margin="5,0,0,0">
-            <ListBox x:Name="MapList" SelectionChanged="MapList_SelectionChanged">
+            <ListBox x:Name="MapList" ItemsSource="{Binding}" SelectionChanged="MapList_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Text="{Binding MapName}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
         </GroupBox>
         <GroupBox Header="Harita Ayarları" HorizontalAlignment="Left" Margin="5,0,5,5" VerticalAlignment="Bottom" Height="205" Width="330">
@@ -77,7 +84,6 @@
                         <TextBox Name="offsetTextbox2" HorizontalAlignment="Center" Height="23" Margin="0,5,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextAlignment="Center"/>
                         <Button Name="SaveMap" Content="Kaydet" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,7,0,0" Height="25px" Width="100px" Click="SaveMap_Click"/>
                     </StackPanel>
-                    <TextBlock Name="mapidTextBlock" Visibility="Hidden" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Null" VerticalAlignment="Top" Margin="0,0,0,0" Grid.Column="1"/>
                     <Image x:Name="MapImage" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Uniform" Width="175" Height="125" Grid.Column="1" Margin="0,18,0,0" MouseDown="MapImage_MouseDown" />
                 </Grid>
                 <Grid Margin="140,5,0,0" Grid.Row="1">

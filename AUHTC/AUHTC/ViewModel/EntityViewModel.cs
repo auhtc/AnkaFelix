@@ -2,6 +2,7 @@
 using AUHTC.Model.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace AUHTC.ViewModel
@@ -66,18 +67,20 @@ namespace AUHTC.ViewModel
 
         internal void SaveSettingsToDB(SettingsModel settings)
         {
-            SettingsModel _setting = GetSettingsById(settings.Id);
-            if (_setting == null)
+            if (entity.ProgramSettings.Any(s => s.MapName == settings.MapName))
             {
-                entity.ProgramSettings.Add(settings);
-                entity.SaveChanges();
+                SettingsModel set = entity.ProgramSettings.FirstOrDefault(s => s.MapName == settings.MapName);
+                set.MapImage = settings.MapImage;
+                set.Offset1X = settings.Offset1X;
+                set.Offset1Y = settings.Offset1Y;
+                set.Offset2X = settings.Offset2X;
+                set.Offset2Y = settings.Offset2Y;
             }
             else
             {
-                entity.ProgramSettings.Remove(_setting);
-                entity.ProgramSettings.Add(settings);
-                entity.SaveChanges();
+                entity.Entry(settings).State = EntityState.Added;
             }
+            entity.SaveChanges();
         }
 
         internal void RemoveSettingsFromDB(SettingsModel settings)

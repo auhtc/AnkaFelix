@@ -212,10 +212,9 @@ namespace AUHTC.ViewModel
             BateryImage2 = new ImageSourceConverter().ConvertFromString("../../MediaFiles/Batarya/" + ((bat2 - 1) - ((bat2 - 1) % 10)) + ".png") as ImageSource;
         }
 
-        internal void SaveMapToDB(int id, string mapName, byte[] mapImage, string offset1, string offset2)
+        internal void SaveMapToDB(string mapName, byte[] mapImage, string offset1, string offset2)
         {
             SettingsModel MapData = new SettingsModel();
-            MapData.Id = id;
             MapData.MapName = mapName;
             MapData.Offset1X = offset1.Split(',')[0];
             MapData.Offset1Y = offset1.Split(',')[1];
@@ -252,18 +251,6 @@ namespace AUHTC.ViewModel
             image.Freeze();
             return image;
         }
-
-        internal List<string> ReadAllMapFromDB()
-        {
-            List<string> Liste = new List<string>();
-
-            foreach (var item in App.Database.GetAllSettings())
-            {
-                Liste.Add(item.MapName);
-            }
-            return Liste;
-        }
-        
         internal SettingsModel ReadMapFromDB(string name)
         {
             return App.Database.GetSettingsByMapName(name);

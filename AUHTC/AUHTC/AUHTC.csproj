@@ -143,8 +143,8 @@
     <Resource Include="MediaFiles\Sponsor\matrisled.jpg" />
     <Resource Include="MediaFiles\Sponsor\microsoft.jpg" />
     <Resource Include="MediaFiles\Sponsor\panelsan.jpg" />
-    <Content Include="MediaFiles\icons\cancel.png" />
     <Resource Include="MediaFiles\icons\ok.png" />
+    <Resource Include="MediaFiles\icons\cancel.png" />
     <Content Include="MediaFiles\Sponsor\sponsor.html" />
     <Resource Include="MediaFiles\Sponsor\Textreme.jpg" />
     <Resource Include="MediaFiles\Sponsor\uzumcu.jpg" />
