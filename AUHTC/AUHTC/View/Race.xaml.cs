@@ -27,12 +27,12 @@ namespace AUHTC.View
         AnkaFelix ParentAnka;
         public double sayi = 1366;
         bool RaceStatus = false;
-        public Race(AnkaFelix parent,ImageSource mapimage)
+        public Race(AnkaFelix parent,ImageSource mapImage)
         {
             InitializeComponent();
             this.DataContext = App.ViewModel;
 
-            MapImage.Source = mapimage;
+            MapImage.Source = mapImage;
             App.AllConstants.Inıt(MapImage);
 
             ParentAnka = parent;
@@ -65,19 +65,6 @@ namespace AUHTC.View
             RaceStatus = true;
             RaceStop.Visibility = Visibility.Visible;
             RaceStart.Visibility = Visibility.Hidden;
-
-
-            //App.ViewModel.ReadFile = File.OpenText("../../MediaFiles/c.txt");
-            //thread = new Thread(new ThreadStart(delegate
-            //{
-            //    while (true)
-            //    {
-            //        if (!App.ViewModel.ReadData())
-            //            thread.Abort();
-            //        Thread.Sleep(100);
-            //    }
-            //}));
-            //thread.Start();
         }
 
         private void Window_Unloaded(object sender, RoutedEventArgs e)

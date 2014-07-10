@@ -37,10 +37,13 @@ namespace AUHTC.View
         {
             Properties.Settings.Default.DefaultPortName = PortNamesCombobox.SelectedItem.ToString();
             Properties.Settings.Default.DefaultBaudRate = Convert.ToInt32(BaudRatesCombobox.SelectedItem);
-            Properties.Settings.Default.MapName = MapList.SelectedValue.ToString();
+
+            SettingsModel sm = MapList.SelectedValue as SettingsModel;
+            Properties.Settings.Default.MapName = sm.MapName;
+
             AUHTC.Properties.Settings.Default.CountDownFormat = countTextBox.Text;
             Properties.Settings.Default.Save();
-            App.CurrentMapName = MapList.SelectedValue.ToString();
+            App.CurrentMapName = sm.MapName;
             App.AllConstants.Setting = App.ViewModel.ReadMapFromDB(App.CurrentMapName);
         }
 
@@ -139,6 +142,9 @@ namespace AUHTC.View
                 offsetTextbox1.Text = setting.Offset1X + "," + setting.Offset1Y;
                 offsetTextbox2.Text = setting.Offset2X + "," + setting.Offset2Y;
                 MapImage.Source = App.ViewModel.Byte2Image(setting.MapImage);
+
+                //App.CurrentMapName = MapList.SelectedValue.ToString();
+                //App.AllConstants.Setting = App.ViewModel.ReadMapFromDB(App.CurrentMapName);
             }
         }
 

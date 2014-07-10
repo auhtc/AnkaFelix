@@ -105,6 +105,7 @@ namespace AUHTC.ViewModel
         {
             try
             {
+                serialPort.Close();
                 serialPort.PortName = portName;
                 serialPort.BaudRate = Convert.ToInt32(baudRate);
                 serialPort.NewLine = "\r";
@@ -128,7 +129,7 @@ namespace AUHTC.ViewModel
                     message += "\n" + openPort + " bağlantı noktasını kullanmak ister misiniz?";
                     if (System.Windows.MessageBox.Show(message, "Uyarı!", System.Windows.MessageBoxButton.OKCancel) == System.Windows.MessageBoxResult.OK)
                     {
-                        Properties.Settings.Default.DefaultPortName = openPort; //TODO -- çalışmıyor olabilir test edilecek
+                        Properties.Settings.Default.DefaultPortName = openPort;
                         ReadDataFromPort(openPort, baudRate);
                     }
                 }
@@ -140,7 +141,7 @@ namespace AUHTC.ViewModel
         {
             try
             {
-                recievedData = serialPort.ReadLine().Trim('$');  //trim işlemi alınan veriye göre değiştirilebilir test edilecek!
+                recievedData = serialPort.ReadLine().Trim('$');
                 System.Windows.Application.Current.Dispatcher.Invoke(
                     DispatcherPriority.Normal, (Action)delegate()
                     {
@@ -152,10 +153,7 @@ namespace AUHTC.ViewModel
                             data.Value = Convert.ToInt32(recievedData.Split(',')[1]);
                             data.RecordDate = DateTime.Now;
                             data.Type = "Standart Data";
-
-                            // Hiz OrtalamaHiz Sicaklik Batarya1 Batarya2 Time değişkenleri Bind için hazır.
-                            // HesapOrtalamaHiz HesapKalanSure HesapHarcananEnerji HesapTahminiEnerji HesapBitirmeOrtalamaHiz değerleri bind için hazır hesaplanacaklar.
-
+                            
                             SaveDataToDb(data);
                         }
                         else if (rgx_GPSData.IsMatch(recievedData))

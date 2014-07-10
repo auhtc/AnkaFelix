@@ -1,4 +1,5 @@
-﻿using AUHTC.View;
+﻿using AUHTC.Model;
+using AUHTC.View;
 using System;
 using System.Windows;
 using System.Windows.Media;
@@ -14,6 +15,7 @@ namespace AUHTC
         {
             InitializeComponent();
             this.DataContext = App.ViewModel;
+
             Animation();
         }
 
@@ -44,6 +46,7 @@ namespace AUHTC
                 settingsWindow.ShowDialog();
             }
             else if (!App.ViewModel.ReadDataFromPort(Properties.Settings.Default.DefaultPortName, Properties.Settings.Default.DefaultBaudRate.ToString()))
+            //else if(false)
             {
                 return;
             }
